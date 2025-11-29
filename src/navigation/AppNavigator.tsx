@@ -4,6 +4,7 @@ import { HomeScreen } from '@/features/home/presentation/HomeScreen';
 import { FakePaywall } from '@/features/onboarding/presentation/components/FakePaywall';
 import { OnboardingScreen } from '@/features/onboarding/presentation/OnboardingScreen';
 import { WelcomeScreen } from '@/features/onboarding/presentation/WelcomeScreen';
+import { ScanFaceScreen } from '@/features/scan/presentation/screens/ScanFaceScreen';
 import { SettingsScreen } from '@/features/settings/presentation/SettingsScreen';
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
@@ -14,6 +15,7 @@ export type RootStackParamList = {
     Home: undefined;
     Settings: undefined;
     Paywall: undefined;
+    ScanFace: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -68,6 +70,14 @@ export function AppNavigator() {
                         options={{
                             gestureEnabled: true,
                             gestureDirection: 'horizontal',
+                        }}
+                    />
+                    <Stack.Screen
+                        name="ScanFace"
+                        component={ScanFaceScreen}
+                        options={{
+                            gestureEnabled: false,
+                            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                         }}
                     />
                 </>

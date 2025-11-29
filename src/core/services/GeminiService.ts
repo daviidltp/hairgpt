@@ -30,6 +30,14 @@ export const GeminiService = {
 
                 const promptText = HairAnalysisPrompts.analyzeHaircut();
 
+                console.log('--- GEMINI REQUEST DEBUG ---');
+                console.log('Prompt:', promptText);
+                console.log('Front Image Present:', !!frontImageBase64);
+                if (frontImageBase64) console.log('Front Image Length:', frontImageBase64.length);
+                console.log('Profile Image Present:', !!profileImageBase64);
+                if (profileImageBase64) console.log('Profile Image Length:', profileImageBase64.length);
+                console.log('----------------------------');
+
                 // Prepare content parts. If images are provided, add them.
                 const parts: any[] = [{ text: promptText }];
 
@@ -56,6 +64,9 @@ export const GeminiService = {
 
                 const result = await model.generateContent(parts);
                 const response = await result.response;
+                console.log('--- GEMINI RESPONSE DEBUG ---');
+                console.log(response.text());
+                console.log('-----------------------------');
                 return response.text();
             } catch (error) {
                 console.warn(`Failed with model ${modelName}:`, error);
