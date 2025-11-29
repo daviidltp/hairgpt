@@ -35,13 +35,10 @@ export function AnalysisLoadingScreen({ progress }: Props) {
         <View className="flex-1 bg-white items-center justify-center px-6">
             {/* Percentage Header */}
             <View className="items-center mb-8">
-                <Text className="text-6xl font-bold text-black mb-2">
+                <Text className="text-7xl font-bold text-black mb-2">
                     {Math.round(progress)}%
                 </Text>
-                <Text className="text-xl text-center font-semibold text-black mb-1">
-                    Analizando tu perfil
-                </Text>
-                <Text className="text-gray-500 text-center">
+                <Text className="text-[24px] text-center font-semibold text-black mb-1">
                     Estamos preparando todo para ti
                 </Text>
             </View>
@@ -55,7 +52,7 @@ export function AnalysisLoadingScreen({ progress }: Props) {
             </View>
 
             {/* Checklist Card */}
-            <View className="w-full bg-gray-50 rounded-3xl p-6 gap-6">
+            <View className="w-full bg-gray-50 rounded-3xl p-6 gap-3">
                 <Text className="font-bold text-lg text-black mb-2">
                     Análisis en tiempo real
                 </Text>
@@ -65,22 +62,28 @@ export function AnalysisLoadingScreen({ progress }: Props) {
                         <Animated.View
                             key={item.id}
                             layout={LinearTransition}
-                            className="flex-row items-center justify-between"
+                            className="flex-row items-center justify-between h-8"
                         >
-                            <View className="flex-row items-center gap-3">
+                            <View className="flex-row items-center gap-3 flex-1">
                                 <View className={`w-2 h-2 rounded-full ${isChecked ? 'bg-black' : 'bg-gray-300'}`} />
-                                <Text className={`text-base ${isChecked ? 'text-black font-medium' : 'text-gray-400'}`}>
+                                <Text
+                                    className={`text-base ${isChecked ? 'text-black font-medium' : 'text-gray-400'} flex-1`}
+                                    numberOfLines={1}
+                                    ellipsizeMode="tail"
+                                >
                                     {item.label}
                                 </Text>
                             </View>
 
-                            {isChecked && (
-                                <Animated.View entering={FadeIn}>
-                                    <View className="w-6 h-6 bg-black rounded-full items-center justify-center">
-                                        <Ionicons name="checkmark" size={14} color="white" />
-                                    </View>
-                                </Animated.View>
-                            )}
+                            <View className="w-6 h-6 items-center justify-center">
+                                {isChecked && (
+                                    <Animated.View entering={FadeIn}>
+                                        <View className="w-6 h-6 bg-black rounded-full items-center justify-center">
+                                            <Ionicons name="checkmark" size={14} color="white" />
+                                        </View>
+                                    </Animated.View>
+                                )}
+                            </View>
                         </Animated.View>
                     );
                 })}
