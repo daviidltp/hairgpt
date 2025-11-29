@@ -58,6 +58,15 @@ export function HomeScreen() {
                             onPress={() => navigation.navigate('ScanFace')}
                         />
 
+                        <View className="h-4" />
+
+                        <ScalePressable
+                            onPress={() => navigation.navigate('ScanFace', { mock: true } as any)}
+                            className="w-full h-14 bg-gray-100 rounded-2xl items-center justify-center"
+                        >
+                            <Text className="text-gray-500 font-semibold">Mock Analysis (Debug)</Text>
+                        </ScalePressable>
+
                         <Text className="text-secondary text-center mt-6 text-sm px-8">
                             We'll scan your face from the front and side to create a 3D understanding of your profile.
                         </Text>

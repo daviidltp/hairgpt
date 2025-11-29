@@ -1,6 +1,6 @@
 import { IconButton, PrimaryButton, ScalePressable } from '@/core/ui';
 import { MarkdownDisplay } from '@/core/ui/typography/MarkdownDisplay';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
@@ -16,6 +16,7 @@ const OVAL_HEIGHT = height * 0.55;
 
 export function ScanFaceScreen() {
     const navigation = useNavigation();
+    const route = useRoute<any>();
     const [permission, requestPermission] = useCameraPermissions();
     const {
         state,
@@ -28,24 +29,15 @@ export function ScanFaceScreen() {
         pickImage,
         confirmPhoto,
         retakePhoto,
-        reset
-    } = useScanViewModel();
+        reset,
+        startMockAnalysis
+    } = useScanViewModel({ initialMock: route.params?.mock });
 
     useEffect(() => {
         if (!permission?.granted) {
             requestPermission();
         }
     }, [permission]);
-
-    if (!permission) return <View />;
-    if (!permission.granted) {
-        return (
-            <View className="flex-1 items-center justify-center bg-background p-6">
-                <Text className="text-primary text-center mb-4">We need your permission to show the camera</Text>
-                <PrimaryButton label="Grant Permission" onPress={requestPermission} />
-            </View>
-        );
-    }
 
     if (state === 'results' && analysisResult) {
         return (
@@ -72,6 +64,16 @@ export function ScanFaceScreen() {
 
     if (state === 'analyzing') {
         return <AnalysisLoadingScreen progress={progress} />;
+    }
+
+    if (!permission) return <View />;
+    if (!permission.granted) {
+        return (
+            <View className="flex-1 items-center justify-center bg-background p-6">
+                <Text className="text-primary text-center mb-4">We need your permission to show the camera</Text>
+                <PrimaryButton label="Grant Permission" onPress={requestPermission} />
+            </View>
+        );
     }
 
     const isPreview = state === 'preview_front' || state === 'preview_profile';
