@@ -65,22 +65,28 @@ export function AnalysisLoadingScreen({ progress }: Props) {
                         <Animated.View
                             key={item.id}
                             layout={LinearTransition}
-                            className="flex-row items-center justify-between"
+                            className="flex-row items-center justify-between h-8"
                         >
-                            <View className="flex-row items-center gap-3">
+                            <View className="flex-row items-center gap-3 flex-1">
                                 <View className={`w-2 h-2 rounded-full ${isChecked ? 'bg-black' : 'bg-gray-300'}`} />
-                                <Text className={`text-base ${isChecked ? 'text-black font-medium' : 'text-gray-400'}`}>
+                                <Text
+                                    className={`text-base ${isChecked ? 'text-black font-medium' : 'text-gray-400'} flex-1`}
+                                    numberOfLines={1}
+                                    ellipsizeMode="tail"
+                                >
                                     {item.label}
                                 </Text>
                             </View>
 
-                            {isChecked && (
-                                <Animated.View entering={FadeIn}>
-                                    <View className="w-6 h-6 bg-black rounded-full items-center justify-center">
-                                        <Ionicons name="checkmark" size={14} color="white" />
-                                    </View>
-                                </Animated.View>
-                            )}
+                            <View className="w-6 h-6 items-center justify-center">
+                                {isChecked && (
+                                    <Animated.View entering={FadeIn}>
+                                        <View className="w-6 h-6 bg-black rounded-full items-center justify-center">
+                                            <Ionicons name="checkmark" size={14} color="white" />
+                                        </View>
+                                    </Animated.View>
+                                )}
+                            </View>
                         </Animated.View>
                     );
                 })}

@@ -3,7 +3,7 @@ import { CameraView } from 'expo-camera';
 import * as Haptics from 'expo-haptics';
 import * as ImagePicker from 'expo-image-picker';
 import { MediaTypeOptions } from 'expo-image-picker';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
 
 export type ScanState =
@@ -14,8 +14,17 @@ export type ScanState =
     | 'analyzing'
     | 'results';
 
-export function useScanViewModel() {
-    const [state, setState] = useState<ScanState>('scanning_front');
+// Configuration for analysis progress animation
+const PROGRESS_CONFIG = {
+    FAST_START: { threshold: 20, stepTime: 50 },   // 0-20%: Fast
+    NORMAL: { threshold: 50, stepTime: 150 },      // 20-50%: Normal
+    SLOW_MIDDLE: { threshold: 80, stepTime: 300 }, // 50-80%: Slow (thinking)
+    FAST_END: { threshold: 99, stepTime: 100 },    // 80-99%: Fast
+};
+
+export function useScanViewModel({ initialMock = false }: { initialMock?: boolean } = {}) {
+    // ... existing state definitions ...
+    const [state, setState] = useState<ScanState>(initialMock ? 'analyzing' : 'scanning_front');
     const [frontPhoto, setFrontPhoto] = useState<string | null>(null);
     const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
 
@@ -26,6 +35,13 @@ export function useScanViewModel() {
     const [analysisResult, setAnalysisResult] = useState<string | null>(null);
     const [progress, setProgress] = useState(0);
     const cameraRef = useRef<CameraView>(null);
+
+    // Start mock analysis on mount if initialMock is true
+    useEffect(() => {
+        if (initialMock) {
+            startAnalysis(true);
+        }
+    }, []);
 
     const capture = async () => {
         if (!cameraRef.current) return;
@@ -103,46 +119,78 @@ export function useScanViewModel() {
         }
     };
 
-    const startAnalysis = async () => {
-        // 15 seconds target duration
-        // 100 steps -> 150ms per step
+    const startAnalysis = async (isMock = false) => {
         let currentProgress = 0;
+        let interval: any;
 
-        const interval = setInterval(() => {
-            currentProgress += 1;
+        const runProgress = () => {
+            let stepTime = PROGRESS_CONFIG.NORMAL.stepTime;
 
-            // Trigger light haptic on every tick
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-            if (currentProgress >= 99) {
-                // Pause at 99% until API returns
-                setProgress(99);
+            if (currentProgress < PROGRESS_CONFIG.FAST_START.threshold) {
+                stepTime = PROGRESS_CONFIG.FAST_START.stepTime;
+            } else if (currentProgress < PROGRESS_CONFIG.NORMAL.threshold) {
+                stepTime = PROGRESS_CONFIG.NORMAL.stepTime;
+            } else if (currentProgress < PROGRESS_CONFIG.SLOW_MIDDLE.threshold) {
+                stepTime = PROGRESS_CONFIG.SLOW_MIDDLE.stepTime;
             } else {
-                setProgress(currentProgress);
+                stepTime = PROGRESS_CONFIG.FAST_END.stepTime;
             }
-        }, 150);
+
+            interval = setTimeout(() => {
+                currentProgress += 1;
+
+                if (currentProgress >= 99) {
+                    setProgress(99);
+                } else {
+                    setProgress(currentProgress);
+                    runProgress();
+                }
+            }, stepTime);
+        };
+
+        runProgress();
 
         try {
-            console.log('Starting Analysis...');
-            const result = await GeminiService.analyzeHaircut(
-                frontBase64 || undefined,
-                profileBase64 || undefined
-            );
+            console.log('Starting Analysis...', isMock ? '(MOCK)' : '');
 
-            clearInterval(interval);
+            let result;
+            if (isMock) {
+                // Simulate API delay
+                await new Promise((resolve) => setTimeout(resolve, 8000));
+                result = "## Mock Analysis Result\n\nThis is a simulated result for testing purposes.\n\n- **Face Shape:** Oval\n- **Hair Type:** Wavy\n- **Recommendation:** Textured Crop";
+            } else {
+                result = await GeminiService.analyzeHaircut(
+                    frontBase64 || undefined,
+                    profileBase64 || undefined
+                );
+            }
 
-            // Fast forward to 100% if done early
-            setProgress(100);
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            clearTimeout(interval!);
 
-            // Small delay to show 100% before switching
-            setTimeout(() => {
-                setAnalysisResult(result);
-                setState('results');
-            }, 500);
+            // Smooth fast forward to 100%
+            const fastForward = async () => {
+                const remaining = 100 - currentProgress;
+                const steps = remaining;
+                const duration = 500; // Complete in 500ms
+                const stepTime = duration / steps;
+
+                for (let i = currentProgress + 1; i <= 100; i++) {
+                    setProgress(i);
+                    await new Promise(resolve => setTimeout(resolve, stepTime));
+                }
+
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+                setTimeout(() => {
+                    setAnalysisResult(result);
+                    setState('results');
+                }, 500);
+            };
+
+            await fastForward();
 
         } catch (error) {
-            clearInterval(interval);
+            clearTimeout(interval!);
             console.error('Analysis Error:', error);
             Alert.alert('Error', 'Analysis failed');
             setState('scanning_front');
@@ -161,6 +209,11 @@ export function useScanViewModel() {
         setProgress(0);
     };
 
+    const startMockAnalysis = () => {
+        setState('analyzing');
+        startAnalysis(true);
+    };
+
     return {
         state,
         cameraRef,
@@ -173,5 +226,6 @@ export function useScanViewModel() {
         confirmPhoto,
         retakePhoto,
         reset,
+        startMockAnalysis
     };
 }
