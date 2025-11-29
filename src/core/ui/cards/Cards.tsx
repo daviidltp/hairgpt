@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, View } from 'react-native';
+import { ScalePressable } from '../buttons/ScalePressable';
 
 interface GlassCardProps {
     children: React.ReactNode;
@@ -45,7 +46,8 @@ interface ActionCardProps {
 
 export function ActionCard({ icon, label, color, onPress }: ActionCardProps) {
     return (
-        <View
+        <ScalePressable
+            onPress={onPress}
             className="bg-surface p-4 flex-row items-center gap-4"
             style={{ borderRadius: 28 }}
         >
@@ -61,6 +63,6 @@ export function ActionCard({ icon, label, color, onPress }: ActionCardProps) {
                 {label}
             </Text>
             <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-        </View>
+        </ScalePressable>
     );
 }
