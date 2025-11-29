@@ -1,19 +1,19 @@
 {
   "expo": {
-    "name": "Incubate",
-    "slug": "incubate",
+    "name": "HairGPT",
+    "slug": "hairgpt",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "incubate",
+    "scheme": "hairgpt",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.david.incubate"
+      "bundleIdentifier": "com.david.hairgpt"
     },
     "android": {
-      "package": "com.david.incubate",
+      "package": "com.david.hairgpt",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
