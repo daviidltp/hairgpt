@@ -64,7 +64,7 @@ function SettingToggle({ icon, label, value, onValueChange }: SettingToggleProps
                 value={value}
                 onValueChange={handleToggle}
                 trackColor={{ false: '#E5E7EB', true: Colors.primary }}
-                thumbColor={Colors.primary}
+                thumbColor={Colors.background}
             />
         </View>
     );

@@ -20,7 +20,7 @@ export const GeminiService = {
             });
         }
 
-        const modelsToTry = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro-vision']; // Vision models preferred
+        const modelsToTry = ['gemini-pro-latest']; // Vision models preferred
         let lastError;
 
         for (const modelName of modelsToTry) {
