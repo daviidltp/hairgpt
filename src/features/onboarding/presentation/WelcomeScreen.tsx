@@ -19,20 +19,20 @@ export function WelcomeScreen() {
     };
 
     return (
-        <View className="flex-1 bg-black justify-center items-center px-6">
-            <StatusBar style="light" />
+        <View className="flex-1 bg-background justify-center items-center px-6">
+            <StatusBar style="dark" />
 
-            {/* Background Ambience */}
-            <View className="absolute inset-0 bg-primary/20 blur-3xl opacity-30" />
+            {/* Background Ambience - Subtle gradient or clean white */}
+            <View className="absolute inset-0 bg-surface opacity-50" />
 
             <Animated.View
                 entering={FadeInDown.delay(200).springify()}
                 className="items-center"
             >
-                <Text className="text-5xl font-bold text-white mb-2 tracking-tighter">
+                <Text className="text-5xl font-bold text-primary mb-2 tracking-tighter">
                     HairGPT
                 </Text>
-                <Text className="text-xl text-gray-400 mb-12 tracking-widest uppercase">
+                <Text className="text-xl text-secondary mb-12 tracking-widest uppercase">
                     Your Personal AI Stylist
                 </Text>
             </Animated.View>

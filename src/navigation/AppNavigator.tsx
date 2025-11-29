@@ -1,16 +1,17 @@
+import { Colors } from '@/core/theme/colors';
 import { useAuthStore } from '@/features/auth/store/useAuthStore';
+import { HomeScreen } from '@/features/home/presentation/HomeScreen';
+import { FakePaywall } from '@/features/onboarding/presentation/components/FakePaywall';
 import { OnboardingScreen } from '@/features/onboarding/presentation/OnboardingScreen';
 import { WelcomeScreen } from '@/features/onboarding/presentation/WelcomeScreen';
 import { SettingsScreen } from '@/features/settings/presentation/SettingsScreen';
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
-import { MainTabNavigator } from './MainTabNavigator';
-
-import { FakePaywall } from '@/features/onboarding/presentation/components/FakePaywall';
+import React from 'react';
 
 export type RootStackParamList = {
     Welcome: undefined;
     Onboarding: undefined;
-    MainTabs: undefined;
+    Home: undefined;
     Settings: undefined;
     Paywall: undefined;
 };
@@ -24,7 +25,7 @@ export function AppNavigator() {
     const getInitialRouteName = () => {
         if (!hasCompletedOnboarding) return 'Welcome';
         if (!isAuthenticated) return 'Welcome'; // Or Onboarding, depending on flow
-        return 'MainTabs';
+        return 'Home';
     };
 
     return (
@@ -32,7 +33,7 @@ export function AppNavigator() {
             initialRouteName={getInitialRouteName()}
             screenOptions={{
                 headerShown: false,
-                cardStyle: { backgroundColor: '#000000' },
+                cardStyle: { backgroundColor: Colors.background },
                 cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
             }}
         >
@@ -57,8 +58,8 @@ export function AppNavigator() {
             ) : (
                 <>
                     <Stack.Screen
-                        name="MainTabs"
-                        component={MainTabNavigator}
+                        name="Home"
+                        component={HomeScreen}
                         options={{ gestureEnabled: false }}
                     />
                     <Stack.Screen

@@ -8,11 +8,11 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import { OnboardingLayout } from './components/OnboardingLayout';
-import { ExperienceStep } from './steps/ExperienceStep';
-import { InductionStep } from './steps/InductionStep';
-import { MotivationStep } from './steps/MotivationStep';
-import { ObstacleStep } from './steps/ObstacleStep';
-import { WelcomeStep } from './steps/WelcomeStep';
+import { ChallengeStep } from './steps/ChallengeStep';
+import { GoalStep } from './steps/GoalStep';
+import { HistoryStep } from './steps/HistoryStep';
+import { ReadyStep } from './steps/ReadyStep';
+import { VibeStep } from './steps/VibeStep';
 
 const TOTAL_STEPS = 5;
 
@@ -72,7 +72,7 @@ export function OnboardingScreen() {
         }
     };
 
-    const isMultipleChoice = currentStepIndex === 2; // ObstacleStep
+    const isMultipleChoice = currentStepIndex === 2; // ChallengeStep
 
     const handleSelectOption = (option: string) => {
         if (isMultipleChoice) {
@@ -98,7 +98,7 @@ export function OnboardingScreen() {
     const currentAnswer = answers[currentStepIndex];
 
     // Configuration for each step
-    const isFinalStep = currentStepIndex === TOTAL_STEPS - 1; // WelcomeStep
+    const isFinalStep = currentStepIndex === TOTAL_STEPS - 1; // ReadyStep
 
     // Show continue button only for multiple choice or final step
     const showContinue = isMultipleChoice || isFinalStep;
@@ -108,15 +108,15 @@ export function OnboardingScreen() {
     const renderStep = () => {
         switch (currentStepIndex) {
             case 0:
-                return <MotivationStep selectedOption={currentAnswer} onSelect={handleSelectOption} />;
+                return <GoalStep selectedOption={currentAnswer} onSelect={handleSelectOption} />;
             case 1:
-                return <ExperienceStep selectedOption={currentAnswer} onSelect={handleSelectOption} />;
+                return <HistoryStep selectedOption={currentAnswer} onSelect={handleSelectOption} />;
             case 2:
-                return <ObstacleStep selectedOption={currentAnswer} onSelect={handleSelectOption} />;
+                return <ChallengeStep selectedOption={currentAnswer} onSelect={handleSelectOption} />;
             case 3:
-                return <InductionStep selectedOption={currentAnswer} onSelect={handleSelectOption} />;
+                return <VibeStep selectedOption={currentAnswer} onSelect={handleSelectOption} />;
             case 4:
-                return <WelcomeStep />;
+                return <ReadyStep />;
             default:
                 return null;
         }
@@ -124,7 +124,7 @@ export function OnboardingScreen() {
 
     return (
         <>
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <OnboardingLayout
                 currentStep={currentStepIndex}
                 totalSteps={TOTAL_STEPS}
@@ -132,7 +132,7 @@ export function OnboardingScreen() {
                 onContinue={handleContinue}
                 canContinue={canContinue}
                 showContinue={showContinue}
-                continueLabel={isFinalStep ? "Enter Incubate" : "Continue"}
+                continueLabel={isFinalStep ? "Enter HairGPT" : "Continue"}
             >
                 <Animated.View
                     key={currentStepIndex}

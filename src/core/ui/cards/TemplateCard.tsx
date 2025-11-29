@@ -21,7 +21,7 @@ export function TemplateCard({ title, description, image, onPress }: TemplateCar
     return (
         <ScalePressable
             onPress={handlePress}
-            className="w-64 h-80 rounded-[28px] overflow-hidden mr-4"
+            className="w-64 h-80 rounded-[28px] overflow-hidden mr-4 bg-surface"
         >
             <ImageBackground
                 source={image}

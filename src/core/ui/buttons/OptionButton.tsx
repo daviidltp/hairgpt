@@ -30,27 +30,27 @@ export function OptionButton({
     return (
         <ScalePressable
             onPress={handlePress}
-            className={`p-5 rounded-2xl border flex-row items-center justify-between ${selected ? 'bg-white border-white' : 'bg-white/5 border-white/10'} ${className}`}
+            className={`p-5 rounded-2xl flex-row items-center justify-between ${selected ? 'bg-primary' : 'bg-surface'} ${className}`}
         >
             <View className="flex-row items-center gap-3 flex-1">
                 {icon && (
                     <Ionicons
                         name={icon}
                         size={24}
-                        color={selected ? '#000000' : Colors.textSecondary}
+                        color={selected ? Colors.white : Colors.textPrimary}
                     />
                 )}
-                <Text className={`text-lg font-medium flex-1 ${selected ? 'text-black' : 'text-gray-300'}`}>
+                <Text className={`text-lg font-medium flex-1 ${selected ? 'text-white' : 'text-primary'}`}>
                     {label}
                 </Text>
             </View>
 
             {multiSelect && (
                 <View
-                    style={selected ? { backgroundColor: '#000000', borderColor: '#000000' } : { borderColor: Colors.mutedWhite }}
+                    style={selected ? { backgroundColor: Colors.white, borderColor: Colors.white } : { borderColor: Colors.textSecondary }}
                     className="w-6 h-6 rounded-full border-2 items-center justify-center"
                 >
-                    {selected && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
+                    {selected && <Ionicons name="checkmark" size={16} color={Colors.primary} />}
                 </View>
             )}
         </ScalePressable>

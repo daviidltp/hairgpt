@@ -41,7 +41,7 @@ export function AnnouncementCard({
             >
                 {/* Header */}
                 <View className="flex-row items-center gap-2 mb-3">
-                    <Ionicons name={icon} size={24} color="#FFFFFF" />
+                    <Ionicons name={icon} size={24} color={Colors.primary} />
                     <Text className="text-white font-bold text-xl">
                         {title}
                     </Text>

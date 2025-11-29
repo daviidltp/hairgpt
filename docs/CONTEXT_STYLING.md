@@ -1,17 +1,3 @@
-*   **Exceptions:** Use `Colors` constant for props that require raw hex values (e.g., Icon colors, Gradient props).
-
-### UI Components (`src/core/ui`)
-*   **Reusable Components:** Always check `src/core/ui` before building a new component.
-*   **Standard Components:**
-    *   `GlassCard`: Standard container with glass effect. **Border Radius: 28**.
-    *   `PrimaryButton`: Main CTA with gradient.
-    *   `IconButton`: Circular button with icon.
-    *   `BottomSheet`: Custom modal sheet.
-
-## 3. Styling Rules
-
-1.  **Border Radius:**
-    *   **Cards:** Always use `borderRadius: 28` (or `rounded-[28px]` if configured, currently using inline style or custom class).
     *   **Buttons:** `rounded-full` or `rounded-2xl`.
 2.  **Spacing:** Use Tailwind spacing scale (`p-4`, `m-6`, `gap-4`).
 3.  **SafeArea:** Always wrap top-level screens in `SafeAreaView` (from `react-native-safe-area-context`) with appropriate edges.

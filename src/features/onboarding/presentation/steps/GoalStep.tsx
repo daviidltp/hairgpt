@@ -2,20 +2,20 @@ import { OptionButton } from '@/core/ui';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-interface MotivationStepProps {
+interface GoalStepProps {
     selectedOption?: string | string[];
     onSelect: (option: string) => void;
 }
 
-const OPTIONS = ["Lucid Dreaming", "Better Sleep", "Subconscious Reprogramming", "Curiosity"];
+const OPTIONS = ["Find my best haircut", "Analyze my face shape", "Try a new style", "Curiosity"];
 
-export function MotivationStep({ selectedOption, onSelect }: MotivationStepProps) {
+export function GoalStep({ selectedOption, onSelect }: GoalStepProps) {
     return (
         <View className="flex-1">
-            <Text className="text-3xl font-bold text-white mb-2">
-                What brings you to Incubate?
+            <Text className="text-3xl font-bold text-primary mb-2">
+                What brings you to HairGPT?
             </Text>
-            <Text className="text-lg text-gray-400 mb-8">
+            <Text className="text-lg text-secondary mb-8">
                 We'll tailor your experience.
             </Text>
 

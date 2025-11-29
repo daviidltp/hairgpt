@@ -32,34 +32,34 @@ export function PrimaryButton({
 
     const getVariantStyles = () => {
         if (disabled || loading) {
-            return 'bg-white/20';
+            return 'bg-gray-200';
         }
 
         switch (variant) {
             case 'primary':
-                return 'bg-white';
+                return 'bg-primary'; // Black
             case 'secondary':
-                return 'bg-white/10 border border-white/20';
+                return 'bg-surface border border-gray-200';
             case 'ghost':
                 return 'bg-transparent';
             default:
-                return 'bg-white';
+                return 'bg-primary';
         }
     };
 
     const getTextStyles = () => {
         if (disabled || loading) {
-            return 'text-white/50';
+            return 'text-gray-400';
         }
 
         switch (variant) {
             case 'primary':
-                return 'text-black';
+                return 'text-white'; // White text on Black button
             case 'secondary':
             case 'ghost':
-                return 'text-white';
+                return 'text-primary'; // Black text
             default:
-                return 'text-black';
+                return 'text-white';
         }
     };
 
@@ -74,7 +74,7 @@ export function PrimaryButton({
             )}
         >
             {loading ? (
-                <ActivityIndicator color={variant === 'primary' ? '#000' : '#fff'} />
+                <ActivityIndicator color={variant === 'primary' ? '#fff' : '#000'} />
             ) : (
                 <Text className={twMerge(
                     'text-xl font-semibold',

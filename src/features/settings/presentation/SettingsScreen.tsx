@@ -24,15 +24,15 @@ function SettingItem({ icon, label, value, showChevron = true, onPress }: Settin
             activeOpacity={0.7}
         >
             <View className="flex-row items-center gap-3 flex-1">
-                <View className="w-9 h-9 bg-white/10 rounded-full items-center justify-center">
-                    <Ionicons name={icon} size={20} color={Colors.textPrimary} />
+                <View className="w-9 h-9 bg-gray-100 rounded-full items-center justify-center">
+                    <Ionicons name={icon} size={20} color={Colors.primary} />
                 </View>
-                <Text className="text-white text-base font-medium flex-1">{label}</Text>
+                <Text className="text-primary text-base font-medium flex-1">{label}</Text>
             </View>
             <View className="flex-row items-center gap-2">
-                {value && <Text className="text-gray-400 text-sm">{value}</Text>}
+                {value && <Text className="text-secondary text-sm">{value}</Text>}
                 {showChevron && (
-                    <Ionicons name="chevron-forward" size={20} color={Colors.textSecondary} />
+                    <Ionicons name="chevron-forward" size={20} color={Colors.textTertiary} />
                 )}
             </View>
         </HapticButton>
@@ -55,16 +55,16 @@ function SettingToggle({ icon, label, value, onValueChange }: SettingToggleProps
     return (
         <View className="flex-row items-center justify-between py-4">
             <View className="flex-row items-center gap-3 flex-1">
-                <View className="w-9 h-9 bg-white/10 rounded-full items-center justify-center">
-                    <Ionicons name={icon} size={20} color={Colors.textPrimary} />
+                <View className="w-9 h-9 bg-gray-100 rounded-full items-center justify-center">
+                    <Ionicons name={icon} size={20} color={Colors.primary} />
                 </View>
-                <Text className="text-white text-base font-medium">{label}</Text>
+                <Text className="text-primary text-base font-medium">{label}</Text>
             </View>
             <Switch
                 value={value}
                 onValueChange={handleToggle}
-                trackColor={{ false: '#374151', true: Colors.primary }}
-                thumbColor="#FFFFFF"
+                trackColor={{ false: '#E5E7EB', true: Colors.primary }}
+                thumbColor={Colors.primary}
             />
         </View>
     );
@@ -83,54 +83,54 @@ export function SettingsScreen() {
                 {/* Header */}
                 <View className="px-6 pt-4 pb-8">
                     <BackButton onPress={() => navigation.goBack()} />
-                    <Text className="text-4xl font-bold text-white mb-2 mt-4">
-                        Ajustes
+                    <Text className="text-4xl font-bold text-primary mb-2 mt-4">
+                        Settings
                     </Text>
-                    <Text className="text-lg text-gray-400">
-                        Personaliza tu experiencia
+                    <Text className="text-lg text-secondary">
+                        Customize your experience
                     </Text>
                 </View>
 
                 {/* Account Section */}
                 <View className="px-6 mb-6">
-                    <Text className="text-white font-bold text-lg mb-4">Cuenta</Text>
+                    <Text className="text-primary font-bold text-lg mb-4">Account</Text>
                     <GlassCard>
                         <SettingItem
                             icon="person-outline"
-                            label="Perfil"
-                            onPress={() => console.log('Perfil')}
+                            label="Profile"
+                            onPress={() => console.log('Profile')}
                         />
-                        <View className="h-px bg-white/10 my-1" />
+                        <View className="h-px bg-gray-200 my-1" />
                         <SettingItem
                             icon="card-outline"
-                            label="Suscripción"
+                            label="Subscription"
                             value="Free"
-                            onPress={() => console.log('Suscripción')}
+                            onPress={() => console.log('Subscription')}
                         />
                     </GlassCard>
                 </View>
 
                 {/* Preferences Section */}
                 <View className="px-6 mb-6">
-                    <Text className="text-white font-bold text-lg mb-4">Preferencias</Text>
+                    <Text className="text-primary font-bold text-lg mb-4">Preferences</Text>
                     <GlassCard>
                         <SettingToggle
                             icon="notifications-outline"
-                            label="Notificaciones"
+                            label="Notifications"
                             value={notificationsEnabled}
                             onValueChange={setNotificationsEnabled}
                         />
-                        <View className="h-px bg-white/10 my-1" />
+                        <View className="h-px bg-gray-200 my-1" />
                         <SettingToggle
                             icon="phone-portrait-outline"
-                            label="Vibración"
+                            label="Haptic Feedback"
                             value={hapticEnabled}
                             onValueChange={setHapticEnabled}
                         />
-                        <View className="h-px bg-white/10 my-1" />
+                        <View className="h-px bg-gray-200 my-1" />
                         <SettingToggle
                             icon="play-outline"
-                            label="Reproducción automática"
+                            label="Auto-play"
                             value={autoPlayEnabled}
                             onValueChange={setAutoPlayEnabled}
                         />
@@ -139,32 +139,32 @@ export function SettingsScreen() {
 
                 {/* App Section */}
                 <View className="px-6 mb-6">
-                    <Text className="text-white font-bold text-lg mb-4">App</Text>
+                    <Text className="text-primary font-bold text-lg mb-4">App</Text>
                     <GlassCard>
                         <SettingItem
                             icon="help-circle-outline"
-                            label="Ayuda y soporte"
-                            onPress={() => console.log('Ayuda')}
+                            label="Help & Support"
+                            onPress={() => console.log('Help')}
                         />
-                        <View className="h-px bg-white/10 my-1" />
+                        <View className="h-px bg-gray-200 my-1" />
                         <SettingItem
                             icon="document-text-outline"
-                            label="Términos y condiciones"
-                            onPress={() => console.log('Términos')}
+                            label="Terms & Conditions"
+                            onPress={() => console.log('Terms')}
                         />
-                        <View className="h-px bg-white/10 my-1" />
+                        <View className="h-px bg-gray-200 my-1" />
                         <SettingItem
                             icon="shield-checkmark-outline"
-                            label="Privacidad"
-                            onPress={() => console.log('Privacidad')}
+                            label="Privacy Policy"
+                            onPress={() => console.log('Privacy')}
                         />
-                        <View className="h-px bg-white/10 my-1" />
+                        <View className="h-px bg-gray-200 my-1" />
                         <SettingItem
                             icon="information-circle-outline"
-                            label="Acerca de"
+                            label="About"
                             value="v1.0.0"
                             showChevron={false}
-                            onPress={() => console.log('Acerca de')}
+                            onPress={() => console.log('About')}
                         />
                     </GlassCard>
                 </View>
@@ -172,10 +172,10 @@ export function SettingsScreen() {
                 {/* Danger Zone */}
                 <View className="px-6 mb-12">
                     <PrimaryButton
-                        label="Cerrar sesión"
+                        label="Log Out"
                         onPress={logout}
                         variant="ghost"
-                        className="bg-[#1a1a1a]"
+                        className="bg-surface"
                         textClassName="text-red-500"
                     />
                 </View>

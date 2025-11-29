@@ -1,3 +1,5 @@
+const palette = require("./src/core/theme/palette");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./App.tsx", "./components/**/*.{js,jsx,ts,tsx}", "./src/**/*.{js,jsx,ts,tsx}"],
@@ -5,16 +7,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "#0a0a0a",
-        surface: "#1a1a1a",
-        primary: "#809FFF", // Azul principal
-        secondary: "#06b6d4", // cyan-500
-        accent: "#f472b6", // pink-400
-        "orange-dark": "#C2410C",
-        "orange-mid": "#EA580C",
-        "orange-light": "#FB923C",
-        "glass-border": "rgba(255, 255, 255, 0.1)",
-        "glass-bg": "rgba(255, 255, 255, 0.05)",
+        background: palette.background,
+        surface: palette.surface,
+        primary: palette.primary,
+        secondary: palette.secondary,
+        accent: palette.accent,
+        "orange-dark": palette.orangeDark,
+        "orange-mid": palette.orangeMid,
+        "orange-light": palette.orangeLight,
+        "glass-border": palette.glassBorder,
+        "glass-bg": palette.glassBg,
       },
     },
   },

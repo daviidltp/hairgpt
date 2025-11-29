@@ -1,3 +1,4 @@
+import { Colors } from '@/core/theme/colors';
 import { PrimaryButton } from '@/core/ui';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -51,14 +52,14 @@ export function OnboardingLayout({
             <View className="flex-row items-center px-6 py-4 gap-4">
                 <TouchableOpacity
                     onPress={handleBack}
-                    className="p-2 -ml-2 rounded-full active:bg-white/10"
+                    className="p-2 -ml-2 rounded-full active:bg-gray-100"
                     hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                    <Ionicons name="arrow-back" size={24} color="white" />
+                    <Ionicons name="arrow-back" size={24} color={Colors.primary} />
                 </TouchableOpacity>
 
                 {/* Progress Bar */}
-                <View className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+                <View className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
                     <Animated.View
                         className="h-full bg-primary rounded-full"
                         style={animatedStyle}

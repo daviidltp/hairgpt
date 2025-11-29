@@ -2,18 +2,18 @@ import { OptionButton } from '@/core/ui';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-interface ObstacleStepProps {
+interface ChallengeStepProps {
     selectedOption?: string | string[];
     onSelect: (option: string) => void;
 }
 
-const OPTIONS = ["Recall", "Stabilization", "Induction", "Consistency"];
+const OPTIONS = ["Finding a style", "Barber communication", "Maintenance", "Unsure what suits me"];
 
-export function ObstacleStep({ selectedOption, onSelect }: ObstacleStepProps) {
+export function ChallengeStep({ selectedOption, onSelect }: ChallengeStepProps) {
     return (
         <View className="flex-1">
-            <Text className="text-3xl font-bold text-white mb-8">
-                What is your main obstacle?
+            <Text className="text-3xl font-bold text-primary mb-8">
+                What is your main challenge?
             </Text>
 
             <View className="gap-4">

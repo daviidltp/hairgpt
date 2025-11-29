@@ -2,18 +2,18 @@ import { OptionButton } from '@/core/ui';
 import React from 'react';
 import { Text, View } from 'react-native';
 
-interface ExperienceStepProps {
+interface VibeStepProps {
     selectedOption?: string | string[];
     onSelect: (option: string) => void;
 }
 
-const OPTIONS = ["Often", "Sometimes", "Once or twice", "Never"];
+const OPTIONS = ["Classic / Professional", "Modern / Trendy", "Low Maintenance", "Bold / Creative"];
 
-export function ExperienceStep({ selectedOption, onSelect }: ExperienceStepProps) {
+export function VibeStep({ selectedOption, onSelect }: VibeStepProps) {
     return (
         <View className="flex-1">
-            <Text className="text-3xl font-bold text-white mb-8">
-                Have you lucid dreamed before?
+            <Text className="text-3xl font-bold text-primary mb-8">
+                What's your preferred vibe?
             </Text>
 
             <View className="gap-4">

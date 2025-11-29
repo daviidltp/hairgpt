@@ -1,3 +1,4 @@
+import { Colors } from '@/core/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import React from 'react';
@@ -16,8 +17,8 @@ interface IconButtonProps extends TouchableOpacityProps {
 export function IconButton({
     icon,
     size = 24,
-    iconColor = '#FFFFFF',
-    backgroundColor = 'rgba(255, 255, 255, 0.1)',
+    iconColor = Colors.primary,
+    backgroundColor = Colors.surface,
     onPress,
     style,
     ...props

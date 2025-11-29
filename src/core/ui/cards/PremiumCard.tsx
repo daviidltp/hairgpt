@@ -22,14 +22,14 @@ export function PremiumCard({ onPress }: PremiumCardProps) {
             className="overflow-hidden rounded-[28px]"
         >
             <LinearGradient
-                colors={[Colors.purpleDark, Colors.purpleLight]}
+                colors={[Colors.primary, Colors.secondary]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{ padding: 24 }}
             >
                 {/* Sparkle Icon */}
                 <View className="flex-row items-center gap-2 mb-3">
-                    <Ionicons name="sparkles" size={24} color="#FFFFFF" />
+                    <Ionicons name="sparkles" size={24} color={Colors.primary} />
                     <Text className="text-white font-bold text-xl">
                         Desbloquea Premium
                     </Text>
