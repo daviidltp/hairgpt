@@ -16,10 +16,10 @@ export type ScanState =
 
 // Configuration for analysis progress animation
 const PROGRESS_CONFIG = {
-    FAST_START: { threshold: 20, stepTime: 50 },   // 0-20%: Fast
-    NORMAL: { threshold: 50, stepTime: 150 },      // 20-50%: Normal
-    SLOW_MIDDLE: { threshold: 80, stepTime: 300 }, // 50-80%: Slow (thinking)
-    FAST_END: { threshold: 99, stepTime: 100 },    // 80-99%: Fast
+    FAST_START: { threshold: 20, stepTime: 350 },   // 0-20%: Normal
+    NORMAL: { threshold: 50, stepTime: 450 },      // 20-50%: Fast
+    SLOW_MIDDLE: { threshold: 80, stepTime: 250 }, // 50-80%: Slow (thinking)
+    FAST_END: { threshold: 99, stepTime: 200 },    // 80-99%: Fast
 };
 
 export function useScanViewModel({ initialMock = false }: { initialMock?: boolean } = {}) {
