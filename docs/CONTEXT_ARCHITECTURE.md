@@ -1,6 +1,6 @@
 # Context Engineering: Clean Architecture & Project Structure
 
-This document defines the architectural standards and structure for the Incubate project. All AI agents and developers must adhere to these guidelines to maintain code quality, scalability, and consistency.
+This document defines the architectural standards and structure for the HairGPT project. All AI agents and developers must adhere to these guidelines to maintain code quality, scalability, and consistency.
 
 ## 1. Architectural Pattern: Feature-First Clean Architecture (Onion Model)
 

@@ -1,75 +1,40 @@
-PROJECT INCUBATE: AI-Powered Lucid Dream Induction (MVP LEAN)
+# PROJECT HAIRGPT: AI-Powered Haircut Analysis & Visagism
 
-1. Concepto y Visión (MVP Simplificado)
+## 1. Concepto y Visión
 
-Incubate es una herramienta de "ingeniería onírica" basada en la sugestión textual.
+**HairGPT** es tu estilista personal impulsado por IA. Analiza tu rostro para recomendarte el corte de pelo perfecto.
 
-La Promesa: "Diseña tu sueño. Lee el guión. Toma el control."
+**La Promesa:** "Sube tu foto. Descubre tu mejor versión."
 
-El Mecanismo: Incubación de Sueños mediante lectura sugestiva antes de dormir. El usuario define el objetivo, la IA redacta el camino mental.
+**El Mecanismo:** Análisis de visagismo mediante IA. El usuario sube una foto frontal y de perfil, y la IA analiza la forma de su cara (diamante, ovalada, cuadrada, etc.) para sugerir los cortes que mejor le sientan.
 
-Estética: Dark, Minimalist, Text-Focused. Tipografía impecable sobre fondo negro absoluto.
+**Estética:** Premium, Moderna, Clean. Enfocada en hombres jóvenes (12-24 años). Estilo "Barber Shop del Futuro".
 
-2. Funcionalidades Core (MVP - Must Haves)
+## 2. Funcionalidades Core (MVP)
 
-Centrado exclusivamente en la generación del guión y la retención.
+### A. The Analyzer (Haircut Recommendation) - CORE FEATURE
 
-A. The Incubator (Script Generator) - LA FUNCIONALIDAD PRINCIPAL
+El usuario proporciona imágenes y la IA genera un análisis detallado.
 
-El usuario describe su deseo y la IA escribe un guión de "autohipnosis" para leer justo antes de cerrar los ojos.
+*   **Input:** Foto Frontal y Foto de Perfil (o descripción detallada en MVP v1).
+*   **Process (IA):** Google Gemini API (Multimodal).
+*   **Prompt System:** "Eres un experto barbero y visajista. Analiza estas imágenes..."
+*   **Output:**
+    *   Forma de la cara detectada.
+    *   Recomendación de corte específico.
+    *   Por qué le queda bien.
 
-Input: Campo de texto simple. "¿Qué quieres soñar hoy?" (Ej: "Volar sobre montañas nevadas").
+### B. History (My Looks)
 
-Process (IA Gratuita): Conexión a API de LLM (Gemini Flash / HuggingFace / OpenAI Free Tier).
+Guardar los análisis anteriores para referencia en la barbería.
 
-Prompt System: "Eres un experto en inducción de sueños lúcidos (MILD). Escribe un guión breve (150 palabras), en segunda persona, usando lenguaje sensorial presente y mantras repetitivos para incubar este sueño..."
+### C. Trends (Explore)
 
-Output (Texto): Se muestra el guión en pantalla con una tipografía grande, legible y relajante. Sin audio generado, solo lectura.
+Ver cortes de tendencia para inspirarse.
 
-B. Background Ambience (Sonido Estático)
+## 3. Stack Técnico
 
-Para no dejar al usuario en silencio total mientras lee, reproducimos un "loop" de audio local simple.
-
-Sin Generación: Solo 1 o 2 archivos MP3 integrados en la app (ej: "Deep Space Drone" o "Pink Noise").
-
-UX: Botón simple de Mute/Play. Se reproduce mientras el usuario lee su guión generado.
-
-C. Dream Journal (Texto Simple)
-
-Esencial para que el usuario vuelva por la mañana.
-
-Funcionalidad: Input de texto básico con fecha automática.
-
-Almacenamiento: Local (AsyncStorage) o Firebase básico para persistencia.
-
-D. Reality Checks (Notificaciones)
-
-La herramienta de retención durante el día.
-
-Funcionalidad: 3 notificaciones aleatorias al día: "¿Estás soñando ahora mismo?".
-
-4. Estrategia de Onboarding (Venta Simplificada)
-
-Slide 1: "Controla tus sueños."
-
-Slide 2: "Escribe tu deseo. La IA crea el camino."
-
-Slide 3: "Lee el guión. Despierta en tu sueño."
-
-Paywall (Opcional en MVP): O simple registro para captar emails.
-
-5. Stack Técnico (Coste Cero / Low Cost)
-
-Framework: React Native (Expo).
-
-IA (LLM):
-
-Opción A (Recomendada): Google Gemini API (Tiene un Free Tier muy generoso que permite muchas peticiones gratis por minuto, ideal para MVP).
-
-Opción B: OpenAI (gpt-4o-mini) - Muy barato, pero no gratis 100%.
-
-Audio: expo-av reproduciendo un archivo .mp3 local (incluido en los assets de la app).
-
-Storage: AsyncStorage (solo en el dispositivo del usuario para MVP) o Firebase Free Tier.
-
-Navegación: React Navigation.
+*   **Framework:** React Native (Expo).
+*   **IA:** Google Gemini API (Flash/Pro) para análisis de visión y texto.
+*   **UI:** React Native, Tailwind/NativeWind.
+*   **Storage:** Local/Firebase.

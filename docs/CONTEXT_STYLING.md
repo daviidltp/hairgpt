@@ -1,39 +1,3 @@
-# Context Engineering: Styling & Design System
-
-This document defines the styling guidelines, design system, and UI standards for the Incubate project. All AI agents and developers must adhere to these guidelines to ensure a premium, consistent user experience.
-
-## 1. Design Philosophy: Premium Glassmorphism
-
-*   **Aesthetic:** Dark mode, deep blacks, vibrant neon accents (Purple, Cyan, Pink, Orange), and glassmorphism effects.
-*   **Goal:** "Wow" the user. The app should feel alive, premium, and immersive.
-*   **Key Elements:**
-    *   **Backgrounds:** Deep dark backgrounds (`#0a0a0a`), not pure black, often with subtle gradients.
-    *   **Cards:** Glass effect (`bg-white/5`, `border-white/10`), rounded corners.
-    *   **Typography:** Clean, modern sans-serif. High contrast for readability.
-
-## 2. Technical Implementation
-
-### Framework
-*   **NativeWind (Tailwind CSS):** We use Tailwind classes for 95% of styling.
-*   **Inline Styles:** Use sparingly, mostly for dynamic values (animations, gradients) or specific border radii that don't map well to tokens.
-
-### Color System (`src/core/theme/colors.ts`)
-*   **Source of Truth:** All colors MUST be imported from `@/core/theme/colors`.
-*   **Do NOT hardcode hex values** in components (except for temporary prototyping).
-*   **Palette:**
-    *   `primary`: #809FFF (Soft Blue)
-    *   `secondary`: #06b6d4 (Cyan)
-    *   `accent`: #f472b6 (Pink)
-    *   `background`: #0a0a0a
-    *   `surface`: #1a1a1a
-    *   `glassBg`: rgba(255, 255, 255, 0.05)
-    *   `glassBorder`: rgba(255, 255, 255, 0.1)
-
-### Using Colors in Tailwind vs. Code
-The `tailwind.config.js` is synced with `src/core/theme/colors.ts`.
-*   **Preferred:** Use Tailwind utility classes for styling components.
-    *   `bg-primary` maps to `Colors.primary`.
-    *   `text-accent` maps to `Colors.accent`.
 *   **Exceptions:** Use `Colors` constant for props that require raw hex values (e.g., Icon colors, Gradient props).
 
 ### UI Components (`src/core/ui`)

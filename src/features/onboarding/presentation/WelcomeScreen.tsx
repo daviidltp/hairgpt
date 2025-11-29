@@ -30,10 +30,10 @@ export function WelcomeScreen() {
                 className="items-center"
             >
                 <Text className="text-5xl font-bold text-white mb-2 tracking-tighter">
-                    Incubate
+                    HairGPT
                 </Text>
                 <Text className="text-xl text-gray-400 mb-12 tracking-widest uppercase">
-                    Awaken Your Mind
+                    Your Personal AI Stylist
                 </Text>
             </Animated.View>
 

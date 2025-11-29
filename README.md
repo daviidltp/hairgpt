@@ -1,6 +1,4 @@
-# Incubate 🌙
-
-Bienvenido a **Incubate**, tu compañero para la incubación de sueños y el cambio de realidad (Reality Shifting).
+# HairGPT: AI Haircut Stylistido a **Incubate**, tu compañero para la incubación de sueños y el cambio de realidad (Reality Shifting).
 
 Esta guía te ayudará a configurar el proyecto desde cero en tu ordenador, asumiendo que es la primera vez que configuras un entorno de desarrollo.
 
