@@ -51,4 +51,78 @@ export function HomeScreen() {
 
             <ScrollView
                 className="flex-1"
+                contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingBottom: 40, paddingTop: 20, gap: 16 }}
+                showsVerticalScrollIndicator={false}
+            >
+                {/* Card 1: Haircut Analysis */}
+                <ScalePressable
+                    onPress={() => handlePress('ScanFace')}
+                    className="w-full h-96 bg-surface rounded-[32px]"
+                    style={{
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 0 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 4.3,
+                        elevation: 4,
+                    }}
+                >
+                    <View className="flex-1 rounded-[32px] overflow-hidden">
+                        {/* Image Section - Takes remaining space */}
+                        <View className="flex-1 items-center justify-center relative pt-4">
+                            <Image
+                                source={require('../../../../assets/images/haircuts/hair_analyzer.png')}
+                                className="w-72 h-72"
+                                resizeMode="contain"
+                            />
+                        </View>
+
+                        {/* Text Section - Auto sized based on content */}
+                        <View className="px-6 py-6 items-center justify-center bg-surface">
+                            <Text className="text-primary font-bold text-3xl mb-2 text-center">
+                                Descubre tu tipo de rostro
+                            </Text>
+                            <Text className="text-secondary text-center text-lg leading-5">
+                                Descubre los mejores cortes de pelo para tu tipo de cara
+                            </Text>
+                        </View>
+                    </View>
+                </ScalePressable>
+
+                {/* Card 2: Baldness Analysis */}
+                <ScalePressable
+                    onPress={() => handlePress('ScanFace')}
+                    className="w-full h-96 bg-surface rounded-[32px]"
+                    style={{
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 0 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 4.3,
+                        elevation: 4,
+                    }}
+                >
+                    <View className="flex-1 rounded-[32px] overflow-hidden">
+                        {/* Image Section - Takes remaining space */}
+                        <View className="flex-1 items-center justify-center relative pt-4">
+                            <Image
+                                source={require('../../../../assets/images/haircuts/bald_analyzer.png')}
+                                className="w-72 h-72"
+                                resizeMode="contain"
+                            />
+                        </View>
+
+                        {/* Text Section - Auto sized based on content */}
+                        <View className="px-6 py-6 items-center justify-center bg-surface">
+                            <Text className="text-primary font-bold text-3xl mb-2 text-center">
+                                ¿Me voy a quedar calvo?
+                            </Text>
+                            <Text className="text-secondary text-center text-lg leading-5">
+                                Analizamos tu tipo de pelo para saber si tienes probabilidad de quedarte calvo
+                            </Text>
+                        </View>
+                    </View>
+                </ScalePressable>
+
+            </ScrollView>
+        </SafeAreaView>
+    );
 }
