@@ -22,11 +22,12 @@ const PROGRESS_CONFIG = {
     FAST_END: { threshold: 99, stepTime: 200 },    // 80-99%: Fast
 };
 
-export function useScanViewModel({ initialMock = false }: { initialMock?: boolean } = {}) {
-    // ... existing state definitions ...
-    const [state, setState] = useState<ScanState>(initialMock ? 'analyzing' : 'scanning_front');
-    const [frontPhoto, setFrontPhoto] = useState<string | null>(null);
-    const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+export function useScanViewModel({ initialMock = false, mockResults = false }: { initialMock?: boolean; mockResults?: boolean } = {}) {
+    const [state, setState] = useState<ScanState>(
+        mockResults ? 'results' : (initialMock ? 'analyzing' : 'scanning_front')
+    );
+    const [frontPhoto, setFrontPhoto] = useState<string | number | null>(null);
+    const [profilePhoto, setProfilePhoto] = useState<string | number | null>(null);
 
     // Base64 storage
     const [frontBase64, setFrontBase64] = useState<string | null>(null);
@@ -38,7 +39,11 @@ export function useScanViewModel({ initialMock = false }: { initialMock?: boolea
 
     // Start mock analysis on mount if initialMock is true
     useEffect(() => {
-        if (initialMock) {
+        if (mockResults) {
+            setFrontPhoto(require('../../../../../assets/images/haircuts/front_image.png'));
+            setProfilePhoto(require('../../../../../assets/images/haircuts/profile_pic.png'));
+            setAnalysisResult("## Mock Analysis Result\n\nThis is a simulated result for testing purposes.\n\n- **Face Shape:** Oval\n- **Hair Type:** Curly hair\n- **Recommendation:** Textured Crop");
+        } else if (initialMock) {
             startAnalysis(true);
         }
     }, []);
@@ -47,11 +52,10 @@ export function useScanViewModel({ initialMock = false }: { initialMock?: boolea
         if (!cameraRef.current) return;
 
         try {
-            console.log('Capturing photo...');
             const photo = await cameraRef.current.takePictureAsync({
                 base64: true,
                 quality: 0.5,
-                skipProcessing: true,
+                mirror: true,
             });
             console.log('Photo captured. URI:', photo?.uri);
 
@@ -157,7 +161,7 @@ export function useScanViewModel({ initialMock = false }: { initialMock?: boolea
             if (isMock) {
                 // Simulate API delay
                 await new Promise((resolve) => setTimeout(resolve, 8000));
-                result = "## Mock Analysis Result\n\nThis is a simulated result for testing purposes.\n\n- **Face Shape:** Oval\n- **Hair Type:** Wavy\n- **Recommendation:** Textured Crop";
+                result = "## Mock Analysis Result\n\nThis is a simulated result for testing purposes.\n\n- **Face Shape:** Oval\n- **Hair Type:** Curly hair\n- **Recommendation:** Textured Crop";
             } else {
                 result = await GeminiService.analyzeHaircut(
                     frontBase64 || undefined,

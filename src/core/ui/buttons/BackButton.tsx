@@ -24,7 +24,7 @@ export function BackButton({ onPress }: BackButtonProps) {
             activeOpacity={0.7}
             className="w-10 h-10 items-center justify-center"
         >
-            <Ionicons name="chevron-back" size={28} color={Colors.primary} />
+            <Ionicons name="arrow-back" size={28} color={Colors.primary} />
         </TouchableOpacity>
     );
 }

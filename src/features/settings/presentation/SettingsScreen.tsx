@@ -20,7 +20,7 @@ function SettingItem({ icon, label, value, showChevron = true, onPress }: Settin
     return (
         <HapticButton
             onPress={onPress}
-            className="flex-row items-center justify-between py-4"
+            className="flex-row items-center justify-between py-2"
             activeOpacity={0.7}
         >
             <View className="flex-row items-center gap-3 flex-1">
@@ -53,7 +53,7 @@ function SettingToggle({ icon, label, value, onValueChange }: SettingToggleProps
     };
 
     return (
-        <View className="flex-row items-center justify-between py-4">
+        <View className="flex-row items-center justify-between py-2">
             <View className="flex-row items-center gap-3 flex-1">
                 <View className="w-9 h-9 bg-gray-100 rounded-full items-center justify-center">
                     <Ionicons name={icon} size={20} color={Colors.primary} />
