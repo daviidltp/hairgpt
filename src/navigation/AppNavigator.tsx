@@ -5,7 +5,6 @@ import { FakePaywall } from '@/features/onboarding/presentation/components/FakeP
 import { OnboardingScreen } from '@/features/onboarding/presentation/OnboardingScreen';
 import { WelcomeScreen } from '@/features/onboarding/presentation/WelcomeScreen';
 import { ScanFaceScreen } from '@/features/scan/presentation/screens/ScanFaceScreen';
-import { ScanResultsScreen } from '@/features/scan/presentation/screens/ScanResultsScreen';
 import { SettingsScreen } from '@/features/settings/presentation/SettingsScreen';
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
@@ -17,11 +16,6 @@ export type RootStackParamList = {
     Settings: undefined;
     Paywall: undefined;
     ScanFace: undefined;
-    ScanResults: {
-        analysisResult: string;
-        frontPhoto: string | number | null;
-        profilePhoto: string | number | null;
-    };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -94,6 +88,14 @@ export function AppNavigator() {
                             presentation: 'modal',
                             gestureEnabled: true,
                             cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="ScanFace"
+                        component={ScanFaceScreen}
+                        options={{
+                            gestureEnabled: false,
+                            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                         }}
                     />
                 </>

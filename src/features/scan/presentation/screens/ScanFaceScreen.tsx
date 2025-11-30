@@ -1,21 +1,21 @@
-import { RootStackParamList } from '@/navigation/AppNavigator';
+import { IconButton, PrimaryButton, ScalePressable } from '@/core/ui';
+import { MarkdownDisplay } from '@/core/ui/typography/MarkdownDisplay';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as Haptics from 'expo-haptics';
+import { Image } from 'expo-image';
 import React, { useEffect } from 'react';
-import { BackHandler, StatusBar, View } from 'react-native';
+import { Dimensions, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AnalysisVisualizer } from '../components/AnalysisVisualizer';
-import { ScanControls } from '../components/ScanControls';
-import { ScanHeader } from '../components/ScanHeader';
-import { ScanOverlay } from '../components/ScanOverlay';
-import { ScanPermissionView } from '../components/ScanPermissionView';
+import { AnalysisLoadingScreen } from '../components/AnalysisLoadingScreen';
 import { useScanViewModel } from '../hooks/useScanViewModel';
 
-type ScanFaceScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ScanFace'>;
+const { width, height } = Dimensions.get('window');
+const OVAL_WIDTH = width * 0.85;
+const OVAL_HEIGHT = height * 0.55;
 
 export function ScanFaceScreen() {
-    const navigation = useNavigation<ScanFaceScreenNavigationProp>();
+    const navigation = useNavigation();
     const route = useRoute<any>();
     const [permission, requestPermission] = useCameraPermissions();
     const {
@@ -30,7 +30,8 @@ export function ScanFaceScreen() {
         confirmPhoto,
         retakePhoto,
         reset,
-    } = useScanViewModel({ initialMock: route.params?.mock, mockResults: route.params?.mockResults });
+        startMockAnalysis
+    } = useScanViewModel({ initialMock: route.params?.mock });
 
     useEffect(() => {
         if (!permission?.granted) {
@@ -38,75 +39,131 @@ export function ScanFaceScreen() {
         }
     }, [permission]);
 
-    useEffect(() => {
-        if (state === 'analyzing') {
-            navigation.setOptions({ gestureEnabled: false });
-            const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
-            return () => {
-                navigation.setOptions({ gestureEnabled: true });
-                backHandler.remove();
-            };
-        }
-    }, [state, navigation]);
+    if (state === 'results' && analysisResult) {
+        return (
+            <SafeAreaView className="flex-1 bg-background" edges={['top']}>
+                <ScrollView className="flex-1 px-6 pt-6" contentContainerStyle={{ paddingBottom: 100 }}>
+                    <View className="flex-row justify-between items-center mb-6">
+                        <Text className="text-3xl font-bold text-primary">Analysis</Text>
+                        <IconButton icon="close" onPress={() => navigation.goBack()} />
+                    </View>
 
-    // Navigate to results screen when analysis is complete
-    useEffect(() => {
-        if (state === 'results' && analysisResult) {
-            navigation.navigate('ScanResults', {
-                analysisResult,
-                frontPhoto,
-                profilePhoto,
-            });
-        }
-    }, [state, analysisResult, frontPhoto, profilePhoto, navigation]);
+                    <View className="flex-row gap-4 mb-8">
+                        <Image source={{ uri: frontPhoto || undefined }} className="flex-1 aspect-[3/4] rounded-2xl bg-gray-200" />
+                        <Image source={{ uri: profilePhoto || undefined }} className="flex-1 aspect-[3/4] rounded-2xl bg-gray-200" />
+                    </View>
+
+                    <MarkdownDisplay>{analysisResult}</MarkdownDisplay>
+
+                    <View className="h-10" />
+                    <PrimaryButton label="Scan Again" onPress={reset} />
+                </ScrollView>
+            </SafeAreaView>
+        );
+    }
 
     if (state === 'analyzing') {
-        const isMock = route.params?.mock;
-        // If mock, use default asset, otherwise use captured front photo
-        const photoUri = isMock
-            ? require('../../../../../assets/images/haircuts/default.png')
-            : frontPhoto;
-
-        return <AnalysisVisualizer photoUri={photoUri} isAnalyzing={progress < 100} />;
+        return <AnalysisLoadingScreen progress={progress} />;
     }
 
     if (!permission) return <View />;
     if (!permission.granted) {
-        return <ScanPermissionView onRequestPermission={requestPermission} />;
+        return (
+            <View className="flex-1 items-center justify-center bg-background p-6">
+                <Text className="text-primary text-center mb-4">We need your permission to show the camera</Text>
+                <PrimaryButton label="Grant Permission" onPress={requestPermission} />
+            </View>
+        );
     }
 
     const isPreview = state === 'preview_front' || state === 'preview_profile';
     const currentPhoto = state.includes('front') ? frontPhoto : profilePhoto;
-    const headerTitle = state.includes('front') ? 'Front Photo' : 'Profile Photo';
-    const instructionText = state.includes('front')
-        ? 'Align your face within the frame looking straight ahead.'
-        : 'Turn to the side and align your profile within the frame.';
-
-    const safeAreaEdges: ('top' | 'bottom')[] = ['top', 'bottom'];
 
     return (
         <View className="flex-1 bg-white">
             <StatusBar barStyle="dark-content" />
-            <SafeAreaView className="flex-1" edges={safeAreaEdges}>
-                <ScanHeader
-                    title={headerTitle}
-                    onBack={() => navigation.goBack()}
-                />
+            <SafeAreaView className="flex-1" edges={['top', 'bottom']}>
+                {/* Header */}
+                <View className="px-6 pt-2 pb-4 flex-row justify-between items-center z-10">
+                    <IconButton
+                        icon="close"
+                        onPress={() => navigation.goBack()}
+                        backgroundColor="rgba(0,0,0,0.05)"
+                        iconColor="black"
+                    />
+                    <Text className="text-lg font-bold text-black">
+                        {state.includes('front') ? 'Front Photo' : 'Profile Photo'}
+                    </Text>
+                    <View className="w-10" />
+                </View>
 
-                <ScanOverlay
-                    cameraRef={cameraRef}
-                    isPreview={isPreview}
-                    currentPhoto={currentPhoto}
-                    instructionText={instructionText}
-                />
+                {/* Camera / Preview Area */}
+                <View className="flex-1 items-center justify-center relative">
+                    <View
+                        style={{
+                            width: OVAL_WIDTH,
+                            height: OVAL_HEIGHT,
+                            borderRadius: OVAL_WIDTH / 2,
+                            overflow: 'hidden',
+                            borderWidth: 4,
+                            borderColor: 'black',
+                            backgroundColor: '#f0f0f0'
+                        }}
+                    >
+                        {isPreview && currentPhoto ? (
+                            <Image source={{ uri: currentPhoto || undefined }} style={{ flex: 1 }} contentFit="cover" />
+                        ) : (
+                            <CameraView
+                                ref={cameraRef}
+                                style={{ flex: 1 }}
+                                facing="front"
+                            />
+                        )}
+                    </View>
 
-                <ScanControls
-                    isPreview={isPreview}
-                    onCapture={capture}
-                    onPickImage={pickImage}
-                    onConfirm={confirmPhoto}
-                    onRetake={retakePhoto}
-                />
+                    <Text className="text-center text-gray-500 mt-6 px-10">
+                        {state.includes('front')
+                            ? 'Align your face within the frame looking straight ahead.'
+                            : 'Turn to the side and align your profile within the frame.'}
+                    </Text>
+                </View>
+
+                {/* Bottom Controls */}
+                <View className="px-6 pb-6 w-full gap-4">
+                    {isPreview ? (
+                        <>
+                            <PrimaryButton
+                                label="Continue"
+                                onPress={confirmPhoto}
+                            />
+                            <ScalePressable
+                                onPress={() => {
+                                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                    retakePhoto();
+                                }}
+                                className="w-full h-14 bg-white border border-black rounded-xl items-center justify-center"
+                            >
+                                <Text className="text-black font-bold text-base">Retake Photo</Text>
+                            </ScalePressable>
+                        </>
+                    ) : (
+                        <>
+                            <PrimaryButton
+                                label="Take Photo"
+                                onPress={capture}
+                            />
+                            <ScalePressable
+                                onPress={() => {
+                                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                    pickImage();
+                                }}
+                                className="w-full h-14 bg-white border border-black rounded-xl items-center justify-center"
+                            >
+                                <Text className="text-black font-bold text-base">Pick from Gallery</Text>
+                            </ScalePressable>
+                        </>
+                    )}
+                </View>
             </SafeAreaView>
         </View>
     );
