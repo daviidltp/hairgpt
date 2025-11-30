@@ -1,10 +1,11 @@
-import { IconButton, ScalePressable } from '@/core/ui';
+import { Colors } from '@/core/theme/colors';
+import { IconButton, PrimaryButton, ScalePressable } from '@/core/ui';
 import { RootStackParamList } from '@/navigation/AppNavigator';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import * as Haptics from 'expo-haptics';
 import React from 'react';
-import { Image, ScrollView, StatusBar, Text, View } from 'react-native';
+import { ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
@@ -12,88 +13,82 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 export function HomeScreen() {
     const navigation = useNavigation<HomeScreenNavigationProp>();
 
-    const handlePress = (route: keyof RootStackParamList, params?: any) => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        navigation.navigate(route, params);
-    };
-
     return (
         <SafeAreaView className="flex-1 bg-background" edges={['top']}>
             <StatusBar barStyle="dark-content" />
-            <View className="px-6 pt-6 pb-2 flex-row justify-between items-center">
-                <Text className="text-3xl font-bold text-primary">
-                    HairGPT
-                </Text>
-                <View className="flex-row gap-2">
-                    <IconButton
-                        icon="document-text-outline"
-                        onPress={() => handlePress('ScanFace', { mockResults: true })}
-                    />
-                    <IconButton
-                        icon="bug-outline"
-                        onPress={() => handlePress('ScanFace', { mock: true })}
-                    />
-                    <IconButton
-                        icon="settings-outline"
-                        onPress={() => handlePress('Settings')}
-                    />
-                </View>
-            </View>
 
             <ScrollView
                 className="flex-1"
-                contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 40, paddingTop: 10 }}
+                contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Card 1: Face Analysis */}
-                <ScalePressable
-                    onPress={() => handlePress('ScanFace')}
-                    className="w-full h-1/2 bg-surface rounded-[32px] p-6 mb-6 items-center justify-center"
-                    style={{
-                        shadowColor: '#000000',
-                        shadowOffset: { width: 0, height: 0 },
-                        shadowOpacity: 0.2,
-                        shadowRadius: 4.3,
-                        elevation: 5,
-                    }}
-                >
-                    <Image
-                        source={require('../../../../assets/images/haircuts/hair_analyzer.png')}
-                        className="w-64 h-64 mb-4"
-                        resizeMode="cover"
-                    />
-                    <Text className="text-primary font-bold text-3xl mb-2 text-center">
-                        Descubre tu tipo de rostro
-                    </Text>
-                    <Text className="text-secondary text-center text-lg leading-5 px-2">
-                        Te recomendaremos el mejor corte de pelo para tu tipo de cara
-                    </Text>
-                </ScalePressable>
+                {/* Header */}
+                <View className="px-6 pt-6 pb-4 flex-row justify-between items-start">
+                    <View>
+                        <Text className="text-4xl font-bold text-primary mb-2">
+                            HairGPT
+                        </Text>
+                        <Text className="text-lg text-secondary">
+                            Analyze your look
+                        </Text>
+                    </View>
+                    <View className="flex-row gap-2">
+                        <IconButton
+                            icon="settings-outline"
+                            onPress={() => navigation.navigate('Settings')}
+                        />
+                    </View>
+                </View>
 
-                {/* Card 2: Hair Loss Analysis */}
-                <ScalePressable
-                    onPress={() => handlePress('ScanFace')}
-                    className="w-full h-1/2 bg-surface rounded-[32px] p-6 items-center justify-center"
-                    style={{
-                        shadowColor: '#000000',
-                        shadowOffset: { width: 0, height: 0 },
-                        shadowOpacity: 0.2,
-                        shadowRadius: 4.3,
-                        elevation: 5,
-                    }}
-                >
-                    <Image
-                        source={require('../../../../assets/images/haircuts/bald_analyzer.png')}
-                        className="w-56 h-56 mb-4"
-                        resizeMode="cover"
+                {/* Main Action Section */}
+                <View className="flex-1 px-6 justify-center items-center mt-8">
+                    <ScalePressable
+                        onPress={() => navigation.navigate('ScanFace')}
+                        className="w-full aspect-square bg-surface rounded-[32px] items-center justify-center mb-8 p-8 shadow-sm border border-gray-100"
+                    >
+                        <View className="w-24 h-24 bg-primary/5 rounded-full items-center justify-center mb-6">
+                            <Ionicons name="scan-outline" size={48} color={Colors.primary} />
+                        </View>
+                        <Text className="text-primary font-bold text-2xl mb-3 text-center">
+                            Face Analysis
+                        </Text>
+                        <Text className="text-secondary text-center text-base leading-6">
+                            Let AI analyze your face shape and suggest the perfect haircut for you.
+                        </Text>
+                    </ScalePressable>
+
+                    <PrimaryButton
+                        label="Start Analysis"
+                        onPress={() => navigation.navigate('ScanFace')}
                     />
-                    <Text className="text-primary font-bold text-3xl mb-2 text-center">
-                        ¿Me voy a quedar calvo?
+
+                    <View className="h-4" />
+
+                    {/* Debug/Mock Options */}
+                    <View className="flex-row gap-2 w-full">
+                        <ScalePressable
+                            onPress={() => navigation.navigate('ScanFace', { mock: true } as any)}
+                            className="flex-1 h-12 bg-gray-100 rounded-xl items-center justify-center"
+                        >
+                            <Text className="text-gray-500 font-medium text-sm">Mock Scan</Text>
+                        </ScalePressable>
+
+                        <ScalePressable
+                            onPress={() => navigation.navigate('ScanResults', {
+                                analysisResult: "## Mock Analysis Result\n\nThis is a simulated result.\n\n- **Face Shape:** Oval\n- **Hair Type:** Wavy\n- **Recommendation:** Textured Crop",
+                                frontPhoto: require('../../../../assets/images/haircuts/front_image.png'),
+                                profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png')
+                            } as any)}
+                            className="flex-1 h-12 bg-gray-100 rounded-xl items-center justify-center"
+                        >
+                            <Text className="text-gray-500 font-medium text-sm">Mock Results</Text>
+                        </ScalePressable>
+                    </View>
+
+                    <Text className="text-secondary text-center mt-8 text-sm px-8">
+                        We'll scan your face from the front and side to create a 3D understanding of your profile.
                     </Text>
-                    <Text className="text-secondary text-center text-lg leading-5 px-2">
-                        Analizamos tu tipo de pelo para saber si tienes probabilidad de quedarte calvo
-                    </Text>
-                </ScalePressable>
+                </View>
             </ScrollView>
         </SafeAreaView>
     );

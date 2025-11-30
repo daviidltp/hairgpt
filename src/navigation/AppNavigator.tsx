@@ -16,11 +16,11 @@ export type RootStackParamList = {
     Home: undefined;
     Settings: undefined;
     Paywall: undefined;
-    ScanFace: undefined;
+    ScanFace: { mock?: boolean } | undefined;
     ScanResults: {
         analysisResult: string;
-        frontPhoto: string | number | null;
-        profilePhoto: string | number | null;
+        frontPhoto: any;
+        profilePhoto: any;
     };
 };
 
