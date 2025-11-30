@@ -18,7 +18,11 @@ type ScanResultsScreenRouteProp = RouteProp<RootStackParamList, 'ScanResults'>;
 export function ScanResultsScreen() {
     const navigation = useNavigation<ScanResultsScreenNavigationProp>();
     const route = useRoute<ScanResultsScreenRouteProp>();
-    const { analysisResult, frontPhoto, profilePhoto } = route.params;
+    const { analysisResult, frontPhoto, profilePhoto } = route.params as {
+        analysisResult: string;
+        frontPhoto: any;
+        profilePhoto: any;
+    };
 
     // Bottom Sheet
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
