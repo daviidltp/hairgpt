@@ -1,11 +1,12 @@
-import { IconButton, ScalePressable } from '@/core/ui';
+import { IconButton } from '@/core/ui';
 import { RootStackParamList } from '@/navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import * as Haptics from 'expo-haptics';
 import React from 'react';
-import { Image, ScrollView, StatusBar, Text, View } from 'react-native';
+import { ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { HomeCard } from './components/HomeCard';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -28,20 +29,46 @@ export function HomeScreen() {
                 </Text>
                 <View className="flex-row gap-2">
                     {/* Debug Buttons */}
-                    <IconButton
-                        icon="flask-outline"
+                    <TouchableOpacity
                         onPress={() => handlePress('ScanFace', { mock: true })}
-                        size={20}
-                    />
-                    <IconButton
-                        icon="eye-outline"
+                        className="w-11 h-11 rounded-full bg-white items-center justify-center"
+                        activeOpacity={0.7}
+                    >
+                        <Text style={{ fontSize: 20 }}>🧪</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
                         onPress={() => handlePress('ScanResults', {
                             analysisResult: "## Mock Analysis Result\n\nThis is a simulated result.\n\n- **Face Shape:** Oval\n- **Hair Type:** Wavy\n- **Recommendation:** Textured Crop",
                             frontPhoto: require('../../../../assets/images/haircuts/front_image.png'),
                             profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png')
                         })}
-                        size={20}
-                    />
+                        className="w-11 h-11 rounded-full bg-white items-center justify-center"
+                        activeOpacity={0.7}
+                    >
+                        <Text style={{ fontSize: 20 }}>💇‍♂️</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        onPress={() => handlePress('BaldnessResults', {
+                            analysisResult: JSON.stringify({
+                                baldnessProbability: 45,
+                                density: 6,
+                                texture: 7,
+                                porosity: 5,
+                                volume: 8,
+                                summary: "Mock summary"
+                            }),
+                            frontPhoto: require('../../../../assets/images/haircuts/front_image.png'),
+                            profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
+                            crownPhoto: require('../../../../assets/images/haircuts/profile_pic.png')
+                        })}
+                        className="w-11 h-11 rounded-full bg-white items-center justify-center"
+                        activeOpacity={0.7}
+                    >
+                        <Text style={{ fontSize: 20 }}>👨‍🦲</Text>
+                    </TouchableOpacity>
+
                     <IconButton
                         icon="settings-outline"
                         onPress={() => handlePress('Settings')}
@@ -51,76 +78,22 @@ export function HomeScreen() {
 
             <ScrollView
                 className="flex-1"
-                contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, paddingBottom: 40, paddingTop: 20, gap: 16 }}
+                contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 16, paddingBottom: 60, paddingTop: 20, gap: 16 }}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Card 1: Haircut Analysis */}
-                <ScalePressable
+                <HomeCard
+                    title="Descubre tu tipo de rostro"
+                    description="Descubre los mejores cortes de pelo para tu tipo de cara"
+                    imageSource={require('../../../../assets/images/haircuts/hair_analyzer.png')}
                     onPress={() => handlePress('ScanFace')}
-                    className="w-full h-96 bg-surface rounded-[32px]"
-                    style={{
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 0 },
-                        shadowOpacity: 0.2,
-                        shadowRadius: 4.3,
-                        elevation: 4,
-                    }}
-                >
-                    <View className="flex-1 rounded-[32px] overflow-hidden">
-                        {/* Image Section - Takes remaining space */}
-                        <View className="flex-1 items-center justify-center relative pt-4">
-                            <Image
-                                source={require('../../../../assets/images/haircuts/hair_analyzer.png')}
-                                className="w-72 h-72"
-                                resizeMode="contain"
-                            />
-                        </View>
+                />
 
-                        {/* Text Section - Auto sized based on content */}
-                        <View className="px-6 py-6 items-center justify-center bg-surface">
-                            <Text className="text-primary font-bold text-3xl mb-2 text-center">
-                                Descubre tu tipo de rostro
-                            </Text>
-                            <Text className="text-secondary text-center text-lg leading-5">
-                                Descubre los mejores cortes de pelo para tu tipo de cara
-                            </Text>
-                        </View>
-                    </View>
-                </ScalePressable>
-
-                {/* Card 2: Baldness Analysis */}
-                <ScalePressable
-                    onPress={() => handlePress('ScanFace')}
-                    className="w-full h-96 bg-surface rounded-[32px]"
-                    style={{
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 0 },
-                        shadowOpacity: 0.2,
-                        shadowRadius: 4.3,
-                        elevation: 4,
-                    }}
-                >
-                    <View className="flex-1 rounded-[32px] overflow-hidden">
-                        {/* Image Section - Takes remaining space */}
-                        <View className="flex-1 items-center justify-center relative pt-4">
-                            <Image
-                                source={require('../../../../assets/images/haircuts/bald_analyzer.png')}
-                                className="w-72 h-72"
-                                resizeMode="contain"
-                            />
-                        </View>
-
-                        {/* Text Section - Auto sized based on content */}
-                        <View className="px-6 py-6 items-center justify-center bg-surface">
-                            <Text className="text-primary font-bold text-3xl mb-2 text-center">
-                                ¿Me voy a quedar calvo?
-                            </Text>
-                            <Text className="text-secondary text-center text-lg leading-5">
-                                Analizamos tu tipo de pelo para saber si tienes probabilidad de quedarte calvo
-                            </Text>
-                        </View>
-                    </View>
-                </ScalePressable>
+                <HomeCard
+                    title="¿Me voy a quedar calvo?"
+                    description="Analizamos tu tipo de pelo para saber si tienes probabilidad de quedarte calvo"
+                    imageSource={require('../../../../assets/images/haircuts/bald_analyzer.png')}
+                    onPress={() => handlePress('ScanFace', { mode: 'baldness' })}
+                />
 
             </ScrollView>
         </SafeAreaView>

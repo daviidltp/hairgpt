@@ -23,6 +23,7 @@ export function ScanFaceScreen() {
         cameraRef,
         frontPhoto,
         profilePhoto,
+        crownPhoto,
         analysisResult,
         progress,
         capture,
@@ -30,7 +31,11 @@ export function ScanFaceScreen() {
         confirmPhoto,
         retakePhoto,
         reset,
-    } = useScanViewModel({ initialMock: route.params?.mock, mockResults: route.params?.mockResults });
+    } = useScanViewModel({
+        initialMock: route.params?.mock,
+        mockResults: route.params?.mockResults,
+        mode: route.params?.mode
+    });
 
     useEffect(() => {
         if (!permission?.granted) {
@@ -52,15 +57,24 @@ export function ScanFaceScreen() {
     // Navigate to results screen when analysis is complete
     useEffect(() => {
         if (state === 'results' && analysisResult) {
-            navigation.navigate('ScanResults', {
-                analysisResult,
-                frontPhoto,
-                profilePhoto,
-            });
+            if (route.params?.mode === 'baldness') {
+                navigation.navigate('BaldnessResults', {
+                    analysisResult,
+                    frontPhoto,
+                    profilePhoto,
+                    crownPhoto,
+                });
+            } else {
+                navigation.navigate('ScanResults', {
+                    analysisResult,
+                    frontPhoto,
+                    profilePhoto,
+                });
+            }
         }
-    }, [state, analysisResult, frontPhoto, profilePhoto, navigation]);
+    }, [state, analysisResult, frontPhoto, profilePhoto, crownPhoto, navigation, route.params?.mode]);
 
-    if (state === 'analyzing') {
+    if (state === 'analyzing' || state === 'results') {
         const isMock = route.params?.mock;
         // If mock, use default asset, otherwise use captured front photo
         const photoUri = isMock
@@ -75,12 +89,19 @@ export function ScanFaceScreen() {
         return <ScanPermissionView onRequestPermission={requestPermission} />;
     }
 
-    const isPreview = state === 'preview_front' || state === 'preview_profile';
-    const currentPhoto = state.includes('front') ? frontPhoto : profilePhoto;
-    const headerTitle = state.includes('front') ? 'Front Photo' : 'Profile Photo';
-    const instructionText = state.includes('front')
-        ? 'Align your face within the frame looking straight ahead.'
-        : 'Turn to the side and align your profile within the frame.';
+    const isPreview = state.includes('preview');
+    const currentPhoto = state.includes('front') ? frontPhoto : (state.includes('profile') ? profilePhoto : crownPhoto);
+
+    let headerTitle = 'Front Photo';
+    let instructionText = 'Align your face within the frame looking straight ahead.';
+
+    if (state.includes('profile')) {
+        headerTitle = 'Profile Photo';
+        instructionText = 'Turn to the side and align your profile within the frame.';
+    } else if (state.includes('crown')) {
+        headerTitle = 'Crown Photo';
+        instructionText = 'Tilt your head down to capture the top of your head (crown).';
+    }
 
     const safeAreaEdges: ('top' | 'bottom')[] = ['top', 'bottom'];
 

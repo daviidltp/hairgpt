@@ -4,6 +4,7 @@ import { HomeScreen } from '@/features/home/presentation/HomeScreen';
 import { FakePaywall } from '@/features/onboarding/presentation/components/FakePaywall';
 import { OnboardingScreen } from '@/features/onboarding/presentation/OnboardingScreen';
 import { WelcomeScreen } from '@/features/onboarding/presentation/WelcomeScreen';
+import { BaldnessResultsScreen } from '@/features/scan/presentation/screens/BaldnessResultsScreen';
 import { ScanFaceScreen } from '@/features/scan/presentation/screens/ScanFaceScreen';
 import { ScanResultsScreen } from '@/features/scan/presentation/screens/ScanResultsScreen';
 import { SettingsScreen } from '@/features/settings/presentation/SettingsScreen';
@@ -16,11 +17,17 @@ export type RootStackParamList = {
     Home: undefined;
     Settings: undefined;
     Paywall: undefined;
-    ScanFace: { mock?: boolean } | undefined;
+    ScanFace: { mock?: boolean; mockResults?: boolean; mode?: 'haircut' | 'baldness' } | undefined;
     ScanResults: {
         analysisResult: string;
         frontPhoto: any;
         profilePhoto: any;
+    };
+    BaldnessResults: {
+        analysisResult: string;
+        frontPhoto: any;
+        profilePhoto: any;
+        crownPhoto: any;
     };
 };
 
@@ -90,6 +97,15 @@ export function AppNavigator() {
                     <Stack.Screen
                         name="ScanResults"
                         component={ScanResultsScreen}
+                        options={{
+                            presentation: 'modal',
+                            gestureEnabled: true,
+                            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="BaldnessResults"
+                        component={BaldnessResultsScreen}
                         options={{
                             presentation: 'modal',
                             gestureEnabled: true,

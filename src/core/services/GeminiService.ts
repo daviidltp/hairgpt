@@ -1,3 +1,4 @@
+import { BaldnessAnalysisPrompts } from '@/core/config/baldnessPrompts';
 import { HairAnalysisPrompts } from '@/core/config/prompts';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
@@ -77,5 +78,84 @@ export const GeminiService = {
 
         console.error('All models failed. Last error:', lastError);
         throw new Error('Failed to analyze haircut with any available model.');
+    },
+
+    async analyzeBaldness(frontImageBase64?: string, profileImageBase64?: string, crownImageBase64?: string): Promise<string> {
+        if (!API_KEY) {
+            // Mock response for testing without API key
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(JSON.stringify({
+                        baldnessProbability: 45,
+                        density: 6,
+                        texture: 7,
+                        porosity: 5,
+                        volume: 8,
+                        summary: "(MOCK) Se observan entradas moderadas (Norwood 2) pero buena densidad en la corona. El riesgo es medio."
+                    }));
+                }, 2000);
+            });
+        }
+
+        const modelsToTry = ['gemini-pro-latest']; // Vision models preferred
+        let lastError;
+
+        for (const modelName of modelsToTry) {
+            try {
+                console.log(`Attempting to analyze baldness with model: ${modelName}`);
+                const model = genAI.getGenerativeModel({ model: modelName });
+
+                const promptText = BaldnessAnalysisPrompts.analyzeBaldness();
+
+                console.log('--- GEMINI BALDNESS REQUEST DEBUG ---');
+                console.log('Prompt:', promptText);
+                console.log('Front Image Present:', !!frontImageBase64);
+                console.log('Profile Image Present:', !!profileImageBase64);
+                console.log('Crown Image Present:', !!crownImageBase64);
+                console.log('-------------------------------------');
+
+                const parts: any[] = [{ text: promptText }];
+
+                if (frontImageBase64) {
+                    parts.push({
+                        inlineData: {
+                            data: frontImageBase64,
+                            mimeType: "image/jpeg",
+                        },
+                    });
+                }
+
+                if (profileImageBase64) {
+                    parts.push({
+                        inlineData: {
+                            data: profileImageBase64,
+                            mimeType: "image/jpeg",
+                        },
+                    });
+                }
+
+                if (crownImageBase64) {
+                    parts.push({
+                        inlineData: {
+                            data: crownImageBase64,
+                            mimeType: "image/jpeg",
+                        },
+                    });
+                }
+
+                const result = await model.generateContent(parts);
+                const response = await result.response;
+                console.log('--- GEMINI BALDNESS RESPONSE DEBUG ---');
+                console.log(response.text());
+                console.log('--------------------------------------');
+                return response.text();
+            } catch (error) {
+                console.warn(`Failed with model ${modelName}:`, error);
+                lastError = error;
+            }
+        }
+
+        console.error('All models failed. Last error:', lastError);
+        throw new Error('Failed to analyze baldness with any available model.');
     }
 };

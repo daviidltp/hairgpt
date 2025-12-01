@@ -11,6 +11,8 @@ export type ScanState =
     | 'preview_front'
     | 'scanning_profile'
     | 'preview_profile'
+    | 'scanning_crown'
+    | 'preview_crown'
     | 'analyzing'
     | 'results';
 
@@ -22,16 +24,18 @@ const PROGRESS_CONFIG = {
     FAST_END: { threshold: 99, stepTime: 200 },    // 80-99%: Fast
 };
 
-export function useScanViewModel({ initialMock = false, mockResults = false }: { initialMock?: boolean; mockResults?: boolean } = {}) {
+export function useScanViewModel({ initialMock = false, mockResults = false, mode = 'haircut' }: { initialMock?: boolean; mockResults?: boolean; mode?: 'haircut' | 'baldness' } = {}) {
     const [state, setState] = useState<ScanState>(
         mockResults ? 'results' : (initialMock ? 'analyzing' : 'scanning_front')
     );
     const [frontPhoto, setFrontPhoto] = useState<string | number | null>(null);
     const [profilePhoto, setProfilePhoto] = useState<string | number | null>(null);
+    const [crownPhoto, setCrownPhoto] = useState<string | number | null>(null);
 
     // Base64 storage
     const [frontBase64, setFrontBase64] = useState<string | null>(null);
     const [profileBase64, setProfileBase64] = useState<string | null>(null);
+    const [crownBase64, setCrownBase64] = useState<string | null>(null);
 
     const [analysisResult, setAnalysisResult] = useState<string | null>(null);
     const [progress, setProgress] = useState(0);
@@ -42,7 +46,19 @@ export function useScanViewModel({ initialMock = false, mockResults = false }: {
         if (mockResults) {
             setFrontPhoto(require('../../../../../assets/images/haircuts/front_image.png'));
             setProfilePhoto(require('../../../../../assets/images/haircuts/profile_pic.png'));
-            setAnalysisResult("## Mock Analysis Result\n\nThis is a simulated result for testing purposes.\n\n- **Face Shape:** Oval\n- **Hair Type:** Curly hair\n- **Recommendation:** Textured Crop");
+            if (mode === 'baldness') {
+                setCrownPhoto(require('../../../../../assets/images/haircuts/profile_pic.png')); // Placeholder
+                setAnalysisResult(JSON.stringify({
+                    baldnessProbability: 45,
+                    density: 6,
+                    texture: 7,
+                    porosity: 5,
+                    volume: 8,
+                    summary: "Mock summary"
+                }));
+            } else {
+                setAnalysisResult("## Mock Analysis Result\n\nThis is a simulated result for testing purposes.\n\n- **Face Shape:** Oval\n- **Hair Type:** Curly hair\n- **Recommendation:** Textured Crop");
+            }
         } else if (initialMock) {
             startAnalysis(true);
         }
@@ -67,6 +83,10 @@ export function useScanViewModel({ initialMock = false, mockResults = false }: {
                 setProfilePhoto(photo?.uri || null);
                 setProfileBase64(photo?.base64 || null);
                 setState('preview_profile');
+            } else if (state === 'scanning_crown') {
+                setCrownPhoto(photo?.uri || null);
+                setCrownBase64(photo?.base64 || null);
+                setState('preview_crown');
             }
         } catch (error) {
             console.error('Capture Error:', error);
@@ -94,6 +114,10 @@ export function useScanViewModel({ initialMock = false, mockResults = false }: {
                     setProfilePhoto(asset.uri);
                     setProfileBase64(asset.base64 || null);
                     setState('preview_profile');
+                } else if (state === 'scanning_crown') {
+                    setCrownPhoto(asset.uri);
+                    setCrownBase64(asset.base64 || null);
+                    setState('preview_crown');
                 }
             }
         } catch (error) {
@@ -106,6 +130,13 @@ export function useScanViewModel({ initialMock = false, mockResults = false }: {
         if (state === 'preview_front') {
             setState('scanning_profile');
         } else if (state === 'preview_profile') {
+            if (mode === 'baldness') {
+                setState('scanning_crown');
+            } else {
+                setState('analyzing');
+                startAnalysis();
+            }
+        } else if (state === 'preview_crown') {
             setState('analyzing');
             startAnalysis();
         }
@@ -120,6 +151,10 @@ export function useScanViewModel({ initialMock = false, mockResults = false }: {
             setProfilePhoto(null);
             setProfileBase64(null);
             setState('scanning_profile');
+        } else if (state === 'preview_crown') {
+            setCrownPhoto(null);
+            setCrownBase64(null);
+            setState('scanning_crown');
         }
     };
 
@@ -161,12 +196,31 @@ export function useScanViewModel({ initialMock = false, mockResults = false }: {
             if (isMock) {
                 // Simulate API delay
                 await new Promise((resolve) => setTimeout(resolve, 8000));
-                result = "## Mock Analysis Result\n\nThis is a simulated result for testing purposes.\n\n- **Face Shape:** Oval\n- **Hair Type:** Curly hair\n- **Recommendation:** Textured Crop";
+                if (mode === 'baldness') {
+                    result = JSON.stringify({
+                        baldnessProbability: 45,
+                        density: 6,
+                        texture: 7,
+                        porosity: 5,
+                        volume: 8,
+                        summary: "Mock summary"
+                    });
+                } else {
+                    result = "## Mock Analysis Result\n\nThis is a simulated result for testing purposes.\n\n- **Face Shape:** Oval\n- **Hair Type:** Curly hair\n- **Recommendation:** Textured Crop";
+                }
             } else {
-                result = await GeminiService.analyzeHaircut(
-                    frontBase64 || undefined,
-                    profileBase64 || undefined
-                );
+                if (mode === 'baldness') {
+                    result = await GeminiService.analyzeBaldness(
+                        frontBase64 || undefined,
+                        profileBase64 || undefined,
+                        crownBase64 || undefined
+                    );
+                } else {
+                    result = await GeminiService.analyzeHaircut(
+                        frontBase64 || undefined,
+                        profileBase64 || undefined
+                    );
+                }
             }
 
             clearTimeout(interval!);
@@ -200,6 +254,7 @@ export function useScanViewModel({ initialMock = false, mockResults = false }: {
             setState('scanning_front');
             setFrontPhoto(null);
             setProfilePhoto(null);
+            setCrownPhoto(null);
         }
     };
 
@@ -207,8 +262,10 @@ export function useScanViewModel({ initialMock = false, mockResults = false }: {
         setState('scanning_front');
         setFrontPhoto(null);
         setProfilePhoto(null);
+        setCrownPhoto(null);
         setFrontBase64(null);
         setProfileBase64(null);
+        setCrownBase64(null);
         setAnalysisResult(null);
         setProgress(0);
     };
@@ -223,6 +280,7 @@ export function useScanViewModel({ initialMock = false, mockResults = false }: {
         cameraRef,
         frontPhoto,
         profilePhoto,
+        crownPhoto,
         analysisResult,
         progress,
         capture,

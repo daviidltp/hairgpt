@@ -69,7 +69,7 @@ export function ScanResultsScreen() {
     };
 
     const handleClose = () => {
-        navigation.goBack();
+        navigation.navigate('Home');
     };
 
     return (
