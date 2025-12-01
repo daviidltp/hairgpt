@@ -57,7 +57,18 @@ export function useScanViewModel({ initialMock = false, mockResults = false, mod
                     summary: "Mock summary"
                 }));
             } else {
-                setAnalysisResult("## Mock Analysis Result\n\nThis is a simulated result for testing purposes.\n\n- **Face Shape:** Oval\n- **Hair Type:** Curly hair\n- **Recommendation:** Textured Crop");
+                setAnalysisResult(JSON.stringify({
+                    faceShape: "Diamante",
+                    hairType: "Ondulado",
+                    explanation: "Tu rostro diamante se beneficia de volumen en la parte superior para equilibrar los pómulos anchos. El cabello ondulado añade textura natural que suaviza las líneas angulares.",
+                    recommendations: [
+                        { name: "Textured Crop", description: "Añade volumen arriba sin ensanchar los lados." },
+                        { name: "Messy Quiff", description: "Equilibra la frente estrecha y da altura." },
+                        { name: "Fringe", description: "Suaviza la frente y resalta los ojos." },
+                        { name: "Side Part", description: "Elegante y define la estructura ósea." },
+                        { name: "Slick Back", description: "Resalta tus pómulos marcados." }
+                    ]
+                }));
             }
         } else if (initialMock) {
             startAnalysis(true);
@@ -206,7 +217,18 @@ export function useScanViewModel({ initialMock = false, mockResults = false, mod
                         summary: "Mock summary"
                     });
                 } else {
-                    result = "## Mock Analysis Result\n\nThis is a simulated result for testing purposes.\n\n- **Face Shape:** Oval\n- **Hair Type:** Curly hair\n- **Recommendation:** Textured Crop";
+                    result = JSON.stringify({
+                        faceShape: "Diamante",
+                        hairType: "Ondulado",
+                        explanation: "Tu rostro diamante se beneficia de volumen en la parte superior para equilibrar los pómulos anchos. El cabello ondulado añade textura natural que suaviza las líneas angulares.",
+                        recommendations: [
+                            { name: "Textured Crop", description: "Añade volumen arriba sin ensanchar los lados." },
+                            { name: "Messy Quiff", description: "Equilibra la frente estrecha y da altura." },
+                            { name: "Fringe", description: "Suaviza la frente y resalta los ojos." },
+                            { name: "Side Part", description: "Elegante y define la estructura ósea." },
+                            { name: "Slick Back", description: "Resalta tus pómulos marcados." }
+                        ]
+                    });
                 }
             } else {
                 if (mode === 'baldness') {

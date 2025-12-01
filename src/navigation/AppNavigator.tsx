@@ -8,7 +8,8 @@ import { BaldnessResultsScreen } from '@/features/scan/presentation/screens/Bald
 import { ScanFaceScreen } from '@/features/scan/presentation/screens/ScanFaceScreen';
 import { ScanResultsScreen } from '@/features/scan/presentation/screens/ScanResultsScreen';
 import { SettingsScreen } from '@/features/settings/presentation/SettingsScreen';
-import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
+import { CardStyleInterpolators, createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 
 export type RootStackParamList = {
@@ -30,6 +31,11 @@ export type RootStackParamList = {
         crownPhoto: any;
     };
 };
+
+
+
+export type ScanResultsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ScanResults'>;
+export type ScanResultsScreenRouteProp = RouteProp<RootStackParamList, 'ScanResults'>;
 
 const Stack = createStackNavigator<RootStackParamList>();
 
