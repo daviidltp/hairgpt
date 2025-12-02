@@ -4,8 +4,9 @@ import { Dimensions, View } from 'react-native';
 import Svg, { Defs, Mask, Rect } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
-const OVAL_WIDTH = width * 0.85;
-const OVAL_HEIGHT = height * 0.55;
+const FRAME_HEIGHT = height * 0.5; // 60% of screen height
+const FRAME_WIDTH = width * 0.9; // Slightly narrower than screen
+const BORDER_RADIUS = 20;
 
 export function CameraOverlay() {
     return (
@@ -15,12 +16,11 @@ export function CameraOverlay() {
                     <Mask id="mask" x="0" y="0" width="100%" height="100%">
                         <Rect x="0" y="0" width="100%" height="100%" fill="white" />
                         <Rect
-                            x={(width - OVAL_WIDTH) / 2}
-                            y={(height - OVAL_HEIGHT) / 2 - 50}
-                            width={OVAL_WIDTH}
-                            height={OVAL_HEIGHT}
-                            rx={OVAL_WIDTH / 2}
-                            ry={OVAL_HEIGHT / 2}
+                            x={(width - FRAME_WIDTH) / 2}
+                            y={(height - FRAME_HEIGHT) / 2 - 50}
+                            width={FRAME_WIDTH}
+                            height={FRAME_HEIGHT}
+                            rx={BORDER_RADIUS}
                             fill="black"
                         />
                     </Mask>
@@ -35,15 +35,15 @@ export function CameraOverlay() {
                 />
             </Svg>
 
-            {/* Oval Border */}
+            {/* Square Border */}
             <View
                 style={{
                     position: 'absolute',
-                    top: (height - OVAL_HEIGHT) / 2 - 50,
-                    left: (width - OVAL_WIDTH) / 2,
-                    width: OVAL_WIDTH,
-                    height: OVAL_HEIGHT,
-                    borderRadius: OVAL_WIDTH / 2,
+                    top: (height - FRAME_HEIGHT) / 2 - 50,
+                    left: (width - FRAME_WIDTH) / 2,
+                    width: FRAME_WIDTH,
+                    height: FRAME_HEIGHT,
+                    borderRadius: BORDER_RADIUS,
                     borderWidth: 2,
                     borderColor: 'rgba(255,255,255,0.3)',
                 }}

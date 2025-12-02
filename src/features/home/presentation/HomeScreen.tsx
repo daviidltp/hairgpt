@@ -30,7 +30,7 @@ export function HomeScreen() {
                 <View className="flex-row gap-2">
                     {/* Debug Buttons */}
                     <TouchableOpacity
-                        onPress={() => handlePress('ScanFace', { mock: true })}
+                        onPress={() => handlePress('FrontPhotoTutorial', { mode: 'haircut' })}
                         className="w-11 h-11 rounded-full bg-white items-center justify-center"
                         activeOpacity={0.7}
                     >
@@ -77,14 +77,14 @@ export function HomeScreen() {
                     title="Descubre tu tipo de rostro"
                     description="Descubre los mejores cortes de pelo para tu tipo de cara"
                     imageSource={require('../../../../assets/images/haircuts/hair_analyzer.png')}
-                    onPress={() => handlePress('ScanFace')}
+                    onPress={() => handlePress('FrontPhotoTutorial')}
                 />
 
                 <HomeCard
                     title="¿Me voy a quedar calvo?"
                     description="Analizamos tu tipo de pelo para saber si tienes probabilidad de quedarte calvo"
                     imageSource={require('../../../../assets/images/haircuts/bald_analyzer.png')}
-                    onPress={() => handlePress('ScanFace', { mode: 'baldness' })}
+                    onPress={() => handlePress('BaldnessFrontTutorial')}
                 />
 
             </ScrollView>
