@@ -94,7 +94,7 @@ export function ProfilePhotoTutorialScreen() {
 
     if (state === 'analyzing' || state === 'results') {
         const photoUri = frontPhoto || (defaultImageRepository.getDefaultFrontImage() as number);
-        return <AnalysisVisualizer photoUri={photoUri} isAnalyzing={progress < 100} />;
+        return <AnalysisVisualizer photoUri={photoUri} isAnalyzing={progress < 100} mode={route.params?.mode} />;
     }
 
     if (!showTutorial) {

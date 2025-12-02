@@ -89,7 +89,7 @@ export function BaldnessCrownTutorialScreen() {
 
     if (state === 'analyzing' || state === 'results') {
         const photoUri = frontPhoto || (defaultImageRepository.getDefaultFrontImage() as number);
-        return <AnalysisVisualizer photoUri={photoUri} isAnalyzing={progress < 100} />;
+        return <AnalysisVisualizer photoUri={photoUri} isAnalyzing={progress < 100} mode="baldness" />;
     }
 
     if (!showTutorial) {
