@@ -28,12 +28,16 @@ export const GeminiService = {
             });
         }
 
-        const modelsToTry = ['gemini-pro-vision', 'gemini-1.5-flash'];
+        const modelsToTry = ['gemini-pro-latest'];
 
         for (const modelName of modelsToTry) {
             try {
                 const model = genAI.getGenerativeModel({ model: modelName });
                 const promptText = HairAnalysisPrompts.analyzeHaircut();
+
+                console.log('=== HAIRCUT ANALYSIS PROMPT ===');
+                console.log(promptText);
+                console.log('===============================');
 
                 const parts: any[] = [{ text: promptText }];
 
@@ -57,7 +61,13 @@ export const GeminiService = {
 
                 const result = await model.generateContent(parts);
                 const response = await result.response;
-                return response.text();
+                const responseText = response.text();
+
+                console.log('=== HAIRCUT ANALYSIS RESPONSE ===');
+                console.log(responseText);
+                console.log('==================================');
+
+                return responseText;
             } catch (error) {
                 console.error(`Error analyzing haircut with model ${modelName}:`, error);
                 // Continue to next model if available
@@ -84,7 +94,7 @@ export const GeminiService = {
             });
         }
 
-        const modelsToTry = ['gemini-pro-vision', 'gemini-1.5-flash'];
+        const modelsToTry = ['gemini-pro-latest'];
         let lastError;
 
         for (const modelName of modelsToTry) {
@@ -93,6 +103,10 @@ export const GeminiService = {
                 const model = genAI.getGenerativeModel({ model: modelName });
 
                 const promptText = BaldnessAnalysisPrompts.analyzeBaldness();
+
+                console.log('=== BALDNESS ANALYSIS PROMPT ===');
+                console.log(promptText);
+                console.log('=================================');
 
                 const parts: any[] = [{ text: promptText }];
 
@@ -125,7 +139,13 @@ export const GeminiService = {
 
                 const result = await model.generateContent(parts);
                 const response = await result.response;
-                return response.text();
+                const responseText = response.text();
+
+                console.log('=== BALDNESS ANALYSIS RESPONSE ===');
+                console.log(responseText);
+                console.log('===================================');
+
+                return responseText;
             } catch (error) {
                 console.warn(`Failed with model ${modelName}:`, error);
                 lastError = error;

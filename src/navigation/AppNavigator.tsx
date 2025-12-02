@@ -5,6 +5,7 @@ import { FakePaywall } from '@/features/onboarding/presentation/components/FakeP
 import { OnboardingScreen } from '@/features/onboarding/presentation/OnboardingScreen';
 import { WelcomeScreen } from '@/features/onboarding/presentation/WelcomeScreen';
 import { BaldnessResultsScreen } from '@/features/scan/presentation/screens/BaldnessResultsScreen';
+import { ImageGalleryScreen } from '@/features/scan/presentation/screens/ImageGalleryScreen';
 import { ScanFaceScreen } from '@/features/scan/presentation/screens/ScanFaceScreen';
 import { ScanResultsScreen } from '@/features/scan/presentation/screens/ScanResultsScreen';
 import { SettingsScreen } from '@/features/settings/presentation/SettingsScreen';
@@ -29,6 +30,11 @@ export type RootStackParamList = {
         frontPhoto: any;
         profilePhoto: any;
         crownPhoto: any;
+    };
+    ImageGallery: {
+        images: any[];
+        initialIndex: number;
+        haircutTitle: string;
     };
 };
 
@@ -116,6 +122,15 @@ export function AppNavigator() {
                             presentation: 'modal',
                             gestureEnabled: true,
                             cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="ImageGallery"
+                        component={ImageGalleryScreen}
+                        options={{
+                            gestureEnabled: true,
+                            gestureDirection: 'horizontal',
+                            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                         }}
                     />
                 </>

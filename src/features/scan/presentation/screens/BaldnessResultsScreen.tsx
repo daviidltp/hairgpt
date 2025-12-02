@@ -1,5 +1,6 @@
 import { PrimaryButton } from '@/core/ui';
 import { BaldnessFeatureData, getBaldnessFeatureData } from '@/features/scan/data/baldnessDescriptions';
+import { useBaldnessResults } from '@/features/scan/presentation/hooks/useBaldnessResults';
 import { RootStackParamList } from '@/navigation/AppNavigator';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -13,14 +14,6 @@ import { ResultsHeader } from '../components/ResultsHeader';
 type BaldnessResultsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'BaldnessResults'>;
 type BaldnessResultsScreenRouteProp = RouteProp<RootStackParamList, 'BaldnessResults'>;
 
-interface BaldnessAnalysisResult {
-    baldnessProbability: number;
-    density: number;
-    texture: number;
-    porosity: number;
-    volume: number;
-    summary: string;
-}
 
 export function BaldnessResultsScreen() {
     const navigation = useNavigation<BaldnessResultsScreenNavigationProp>();
@@ -31,40 +24,11 @@ export function BaldnessResultsScreen() {
     const snapPoints = useMemo(() => ['50%'], []);
     const [selectedFeature, setSelectedFeature] = useState<BaldnessFeatureData | null>(null);
 
-    // Default values for development/testing if params are missing
-    const { analysisResult, frontPhoto, profilePhoto, crownPhoto } = route.params || {
-        analysisResult: JSON.stringify({
-            baldnessProbability: 45,
-            density: 6,
-            texture: 7,
-            porosity: 5,
-            volume: 8,
-            summary: "Mock summary"
-        }),
-        frontPhoto: null,
-        profilePhoto: null,
-        crownPhoto: null
-    };
+    // Get analysis result from route params
+    const { analysisResult, frontPhoto, profilePhoto, crownPhoto } = route.params;
 
-    const parsedResult: BaldnessAnalysisResult = useMemo(() => {
-        try {
-            if (typeof analysisResult !== 'string') return analysisResult;
-
-            // Clean the string: remove markdown code blocks if present
-            const cleanResult = analysisResult.replace(/```json/g, '').replace(/```/g, '').trim();
-            return JSON.parse(cleanResult);
-        } catch (e) {
-            console.error("Failed to parse analysis result", e);
-            return {
-                baldnessProbability: 0,
-                density: 0,
-                texture: 0,
-                porosity: 0,
-                volume: 0,
-                summary: "Error parsing results"
-            };
-        }
-    }, [analysisResult]);
+    // Parse the analysis result using ViewModel hook
+    const parsedResult = useBaldnessResults(analysisResult);
 
     const handleClose = () => {
         navigation.navigate('Home');

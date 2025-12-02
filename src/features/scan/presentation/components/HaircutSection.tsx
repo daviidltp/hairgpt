@@ -1,20 +1,21 @@
+import { ScalePressable } from '@/core/ui/buttons/ScalePressable';
+import * as Haptics from 'expo-haptics';
 import React from 'react';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { Image, ImageSourcePropType, ScrollView, Text, View } from 'react-native';
 
 interface HaircutSectionProps {
     title: string;
     rank: number;
+    images: ImageSourcePropType[];
+    onImagePress?: (imageIndex: number, images: ImageSourcePropType[], title: string) => void;
 }
 
-// Placeholder images for now - in a real app these would come from a database or API based on the haircut name
-const MOCK_HAIRCUT_IMAGES = [
-    require('../../../../../assets/images/haircuts/front_image.png'),
-    require('../../../../../assets/images/haircuts/profile_pic.png'),
-    require('../../../../../assets/images/haircuts/front_image.png'),
-    require('../../../../../assets/images/haircuts/profile_pic.png'),
-];
+export function HaircutSection({ title, rank, images, onImagePress }: HaircutSectionProps) {
+    const handleImagePress = (index: number) => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        onImagePress?.(index, images, title);
+    };
 
-export function HaircutSection({ title, rank }: HaircutSectionProps) {
     return (
         <View className="mb-6">
             <View className="flex-row items-center px-6 mb-3">
@@ -31,14 +32,18 @@ export function HaircutSection({ title, rank }: HaircutSectionProps) {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ paddingHorizontal: 24, gap: 12 }}
             >
-                {MOCK_HAIRCUT_IMAGES.map((img, index) => (
-                    <View key={index} className="w-52 h-52 rounded-2xl overflow-hidden bg-card">
+                {images.map((img, index) => (
+                    <ScalePressable
+                        key={index}
+                        onPress={() => handleImagePress(index)}
+                        className="w-52 h-52 rounded-2xl overflow-hidden bg-card"
+                    >
                         <Image
                             source={img}
                             className="w-full h-full"
                             resizeMode="cover"
                         />
-                    </View>
+                    </ScalePressable>
                 ))}
             </ScrollView>
         </View>

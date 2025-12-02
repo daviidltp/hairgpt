@@ -1,10 +1,12 @@
 import { PrimaryButton } from '@/core/ui/buttons/PrimaryButton';
-import { getFaceShapeData, getHairTypeData } from '@/features/scan/data/analysisDescriptions';
+import { HaircutRepository } from '@/features/scan/data/repositories/HaircutRepository';
 import { AnalysisBottomSheet } from '@/features/scan/presentation/components/AnalysisBottomSheet';
 import { AnalysisStatsCard } from '@/features/scan/presentation/components/AnalysisStatsCard';
 import { HaircutSection } from '@/features/scan/presentation/components/HaircutSection';
 import { PhotosDisplay } from '@/features/scan/presentation/components/PhotosDisplay';
 import { ResultsHeader } from '@/features/scan/presentation/components/ResultsHeader';
+import { useAnalysisData } from '@/features/scan/presentation/hooks/useAnalysisData';
+import { useScanResults } from '@/features/scan/presentation/hooks/useScanResults';
 import { ScanResultsScreenNavigationProp, ScanResultsScreenRouteProp } from '@/navigation/AppNavigator';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -12,17 +14,9 @@ import React, { useCallback, useMemo, useRef } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-interface HaircutRecommendation {
-    name: string;
-    description: string;
-}
+// Repository instance (in a real app, this would come from DI container)
+const haircutRepository = new HaircutRepository();
 
-interface AnalysisResult {
-    faceShape: string;
-    hairType: string;
-    explanation: string;
-    recommendations: HaircutRecommendation[];
-}
 
 export function ScanResultsScreen() {
     const navigation = useNavigation<ScanResultsScreenNavigationProp>();
@@ -35,31 +29,11 @@ export function ScanResultsScreen() {
 
     // BottomSheet refs
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-    const snapPoints = useMemo(() => ['65%'], []);
+    const snapPoints = useMemo(() => ['45%'], []);
     const [modalContent, setModalContent] = React.useState<'face' | 'hair'>('face');
 
-    // Parse the analysis result
-    const parsedResult: AnalysisResult = useMemo(() => {
-        try {
-            // Clean the string if it contains markdown code blocks
-            let jsonString = analysisResult;
-            if (jsonString.includes('```json')) {
-                jsonString = jsonString.replace(/```json\n/g, '').replace(/\n```/g, '');
-            } else if (jsonString.includes('```')) {
-                jsonString = jsonString.replace(/```\n/g, '').replace(/\n```/g, '');
-            }
-
-            return JSON.parse(jsonString);
-        } catch (e) {
-            console.error("Failed to parse analysis result:", e);
-            return {
-                faceShape: "Desconocido",
-                hairType: "Desconocido",
-                explanation: "No se pudo analizar el resultado.",
-                recommendations: []
-            };
-        }
-    }, [analysisResult]);
+    // Parse the analysis result using ViewModel hook
+    const parsedResult = useScanResults(analysisResult);
 
     const handleClose = () => {
         navigation.navigate('Home');
@@ -74,6 +48,14 @@ export function ScanResultsScreen() {
         bottomSheetModalRef.current?.present();
     }, []);
 
+    const handleImagePress = useCallback((imageIndex: number, images: any[], haircutTitle: string) => {
+        navigation.navigate('ImageGallery', {
+            images,
+            initialIndex: imageIndex,
+            haircutTitle,
+        });
+    }, [navigation]);
+
     const renderBackdrop = useCallback(
         (props: any) => (
             <BottomSheetBackdrop
@@ -86,15 +68,10 @@ export function ScanResultsScreen() {
         []
     );
 
-    const getModalData = () => {
-        if (modalContent === 'face') {
-            return getFaceShapeData(parsedResult.faceShape);
-        } else {
-            return getHairTypeData(parsedResult.hairType);
-        }
-    };
-
-    const modalData = getModalData();
+    const modalData = useAnalysisData(
+        modalContent,
+        modalContent === 'face' ? parsedResult.faceShape : parsedResult.hairType
+    );
 
     return (
         <BottomSheetModalProvider>
@@ -117,23 +94,28 @@ export function ScanResultsScreen() {
                         />
                     </View>
 
-                    <View className="px-6 mt-6 mb-8">
+                    <View className="px-6 mt-6 mb-2">
+                        <Text className="text-xl font-bold text-foreground">Mejores cortes para ti</Text>
+                    </View>
+
+                    <View className="px-6 mb-8">
                         <Text className="text-lg text-foreground leading-relaxed">
                             {parsedResult.explanation}
                         </Text>
                     </View>
 
-                    <View className="mb-4 px-6">
-                        <Text className="text-xl font-bold text-foreground">Mejores cortes para ti</Text>
-                    </View>
-
-                    {parsedResult.recommendations.map((rec, index) => (
-                        <HaircutSection
-                            key={index}
-                            title={rec.name}
-                            rank={index + 1}
-                        />
-                    ))}
+                    {parsedResult.recommendations.map((rec, index) => {
+                        const images = haircutRepository.getHaircutImages(rec.name);
+                        return (
+                            <HaircutSection
+                                key={index}
+                                title={rec.name}
+                                rank={index + 1}
+                                images={images}
+                                onImagePress={handleImagePress}
+                            />
+                        );
+                    })}
 
                     <View className="h-10" />
 

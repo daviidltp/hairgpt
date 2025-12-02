@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { MediaTypeOptions } from 'expo-image-picker';
 import { useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native';
+import { MockDataRepository } from '../../data/repositories/MockDataRepository';
 
 export type ScanState =
     | 'scanning_front'
@@ -15,6 +16,9 @@ export type ScanState =
     | 'preview_crown'
     | 'analyzing'
     | 'results';
+
+// Repository instances (in a real app, these would come from DI container)
+const mockDataRepository = new MockDataRepository();
 
 // Configuration for analysis progress animation
 const PROGRESS_CONFIG = {
@@ -41,34 +45,20 @@ export function useScanViewModel({ initialMock = false, mockResults = false, mod
     const [progress, setProgress] = useState(0);
     const cameraRef = useRef<CameraView>(null);
 
-    // Start mock analysis on mount if initialMock is true
+    // Start mock analysis on mount if mockResults is true
     useEffect(() => {
         if (mockResults) {
-            setFrontPhoto(require('../../../../../assets/images/haircuts/front_image.png'));
-            setProfilePhoto(require('../../../../../assets/images/haircuts/profile_pic.png'));
+            // Use mock data repository
+            setFrontPhoto(mockDataRepository.getMockFrontPhoto() as number);
+            setProfilePhoto(mockDataRepository.getMockProfilePhoto() as number);
+
             if (mode === 'baldness') {
-                setCrownPhoto(require('../../../../../assets/images/haircuts/profile_pic.png')); // Placeholder
-                setAnalysisResult(JSON.stringify({
-                    baldnessProbability: 45,
-                    density: 6,
-                    texture: 7,
-                    porosity: 5,
-                    volume: 8,
-                    summary: "Mock summary"
-                }));
+                setCrownPhoto(mockDataRepository.getMockCrownPhoto() as number);
+                const mockData = mockDataRepository.getMockBaldnessAnalysis();
+                setAnalysisResult(JSON.stringify(mockData));
             } else {
-                setAnalysisResult(JSON.stringify({
-                    faceShape: "Diamante",
-                    hairType: "Ondulado",
-                    explanation: "Tu rostro diamante se beneficia de volumen en la parte superior para equilibrar los pómulos anchos. El cabello ondulado añade textura natural que suaviza las líneas angulares.",
-                    recommendations: [
-                        { name: "Textured Crop", description: "Añade volumen arriba sin ensanchar los lados." },
-                        { name: "Messy Quiff", description: "Equilibra la frente estrecha y da altura." },
-                        { name: "Fringe", description: "Suaviza la frente y resalta los ojos." },
-                        { name: "Side Part", description: "Elegante y define la estructura ósea." },
-                        { name: "Slick Back", description: "Resalta tus pómulos marcados." }
-                    ]
-                }));
+                const mockData = mockDataRepository.getMockHaircutAnalysis();
+                setAnalysisResult(JSON.stringify(mockData));
             }
         } else if (initialMock) {
             startAnalysis(true);
@@ -207,28 +197,14 @@ export function useScanViewModel({ initialMock = false, mockResults = false, mod
             if (isMock) {
                 // Simulate API delay
                 await new Promise((resolve) => setTimeout(resolve, 8000));
+
+                // Use mock data repository
                 if (mode === 'baldness') {
-                    result = JSON.stringify({
-                        baldnessProbability: 45,
-                        density: 6,
-                        texture: 7,
-                        porosity: 5,
-                        volume: 8,
-                        summary: "Mock summary"
-                    });
+                    const mockData = mockDataRepository.getMockBaldnessAnalysis();
+                    result = JSON.stringify(mockData);
                 } else {
-                    result = JSON.stringify({
-                        faceShape: "Diamante",
-                        hairType: "Ondulado",
-                        explanation: "Tu rostro diamante se beneficia de volumen en la parte superior para equilibrar los pómulos anchos. El cabello ondulado añade textura natural que suaviza las líneas angulares.",
-                        recommendations: [
-                            { name: "Textured Crop", description: "Añade volumen arriba sin ensanchar los lados." },
-                            { name: "Messy Quiff", description: "Equilibra la frente estrecha y da altura." },
-                            { name: "Fringe", description: "Suaviza la frente y resalta los ojos." },
-                            { name: "Side Part", description: "Elegante y define la estructura ósea." },
-                            { name: "Slick Back", description: "Resalta tus pómulos marcados." }
-                        ]
-                    });
+                    const mockData = mockDataRepository.getMockHaircutAnalysis();
+                    result = JSON.stringify(mockData);
                 }
             } else {
                 if (mode === 'baldness') {

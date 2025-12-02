@@ -24,10 +24,11 @@ export function AnalysisBottomSheet({
             index={0}
             snapPoints={snapPoints}
             enablePanDownToClose={true}
+            enableDynamicSizing={false}
             backdropComponent={renderBackdrop}
             backgroundStyle={{ backgroundColor: '#FFFFFF', borderRadius: 24 }}
         >
-            <BottomSheetView className="flex-1 p-6">
+            <BottomSheetView className="p-6">
                 <Text className="text-xl font-bold mb-4 text-foreground text-center">
                     {title}
                 </Text>
