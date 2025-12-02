@@ -13,33 +13,32 @@ const genAI = new GoogleGenerativeAI(API_KEY || '');
 export const GeminiService = {
     async analyzeHaircut(frontImageBase64?: string, profileImageBase64?: string): Promise<string> {
         if (!API_KEY) {
-            // Mock response for testing without API key
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve(`(MOCK RESPONSE - NO API KEY)\n\n**Tu Rostro:** Diamante\n\n**El Diagnóstico:** Tienes pómulos marcados y una barbilla definida. Tu rostro es anguloso y masculino.\n\n**Cortes Recomendados:**\n1. **Textured Crop con Fade:** Suaviza los ángulos superiores y resalta tu mandíbula.\n2. **Messy Quiff:** Da volumen arriba para equilibrar la frente estrecha.\n\n**Tip Pro:** Usa cera mate para dar textura sin apelmazar.`);
-                }, 2000);
+            console.log('--- MOCK GEMINI HAIRCUT RESPONSE ---');
+            return JSON.stringify({
+                faceShape: "Diamante",
+                hairType: "Ondulado",
+                explanation: "Tu rostro diamante se beneficia de volumen en la parte superior para equilibrar los pómulos anchos. El cabello ondulado añade textura natural que suaviza las líneas angulares.",
+                recommendations: [
+                    { name: "Textured Crop", description: "Añade volumen arriba sin ensanchar los lados." },
+                    { name: "Messy Quiff", description: "Equilibra la frente estrecha y da altura." },
+                    { name: "Fringe", description: "Suaviza la frente y resalta los ojos." },
+                    { name: "Side Part", description: "Elegante y define la estructura ósea." },
+                    { name: "Slick Back", description: "Resalta tus pómulos marcados." }
+                ]
             });
         }
 
-        const modelsToTry = ['gemini-pro-latest']; // Vision models preferred
-        let lastError;
+        const modelsToTry = ['gemini-pro-latest'];
 
         for (const modelName of modelsToTry) {
             try {
-                console.log(`Attempting to analyze with model: ${modelName}`);
                 const model = genAI.getGenerativeModel({ model: modelName });
-
                 const promptText = HairAnalysisPrompts.analyzeHaircut();
 
-                console.log('--- GEMINI REQUEST DEBUG ---');
-                console.log('Prompt:', promptText);
-                console.log('Front Image Present:', !!frontImageBase64);
-                if (frontImageBase64) console.log('Front Image Length:', frontImageBase64.length);
-                console.log('Profile Image Present:', !!profileImageBase64);
-                if (profileImageBase64) console.log('Profile Image Length:', profileImageBase64.length);
-                console.log('----------------------------');
+                console.log('=== HAIRCUT ANALYSIS PROMPT ===');
+                console.log(promptText);
+                console.log('===============================');
 
-                // Prepare content parts. If images are provided, add them.
                 const parts: any[] = [{ text: promptText }];
 
                 if (frontImageBase64) {
@@ -60,23 +59,21 @@ export const GeminiService = {
                     });
                 }
 
-                // If no images are provided (text-only test), we might want to warn or just send text
-                // But for now, we assume images will be passed or the prompt handles "no image" context if needed.
-
                 const result = await model.generateContent(parts);
                 const response = await result.response;
-                console.log('--- GEMINI RESPONSE DEBUG ---');
-                console.log(response.text());
-                console.log('-----------------------------');
-                return response.text();
+                const responseText = response.text();
+
+                console.log('=== HAIRCUT ANALYSIS RESPONSE ===');
+                console.log(responseText);
+                console.log('==================================');
+
+                return responseText;
             } catch (error) {
-                console.warn(`Failed with model ${modelName}:`, error);
-                lastError = error;
-                // Continue to next model
+                console.error(`Error analyzing haircut with model ${modelName}:`, error);
+                // Continue to next model if available
             }
         }
 
-        console.error('All models failed. Last error:', lastError);
         throw new Error('Failed to analyze haircut with any available model.');
     },
 
@@ -97,7 +94,7 @@ export const GeminiService = {
             });
         }
 
-        const modelsToTry = ['gemini-pro-latest']; // Vision models preferred
+        const modelsToTry = ['gemini-pro-latest'];
         let lastError;
 
         for (const modelName of modelsToTry) {
@@ -107,12 +104,9 @@ export const GeminiService = {
 
                 const promptText = BaldnessAnalysisPrompts.analyzeBaldness();
 
-                console.log('--- GEMINI BALDNESS REQUEST DEBUG ---');
-                console.log('Prompt:', promptText);
-                console.log('Front Image Present:', !!frontImageBase64);
-                console.log('Profile Image Present:', !!profileImageBase64);
-                console.log('Crown Image Present:', !!crownImageBase64);
-                console.log('-------------------------------------');
+                console.log('=== BALDNESS ANALYSIS PROMPT ===');
+                console.log(promptText);
+                console.log('=================================');
 
                 const parts: any[] = [{ text: promptText }];
 
@@ -145,10 +139,13 @@ export const GeminiService = {
 
                 const result = await model.generateContent(parts);
                 const response = await result.response;
-                console.log('--- GEMINI BALDNESS RESPONSE DEBUG ---');
-                console.log(response.text());
-                console.log('--------------------------------------');
-                return response.text();
+                const responseText = response.text();
+
+                console.log('=== BALDNESS ANALYSIS RESPONSE ===');
+                console.log(responseText);
+                console.log('===================================');
+
+                return responseText;
             } catch (error) {
                 console.warn(`Failed with model ${modelName}:`, error);
                 lastError = error;

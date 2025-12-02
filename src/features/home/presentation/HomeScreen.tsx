@@ -39,9 +39,20 @@ export function HomeScreen() {
 
                     <TouchableOpacity
                         onPress={() => handlePress('ScanResults', {
-                            analysisResult: "## Mock Analysis Result\n\nThis is a simulated result.\n\n- **Face Shape:** Oval\n- **Hair Type:** Wavy\n- **Recommendation:** Textured Crop",
+                            analysisResult: JSON.stringify({
+                                faceShape: "Diamante",
+                                hairType: "Ondulado",
+                                explanation: "Tu rostro diamante se beneficia de volumen en la parte superior para equilibrar los pómulos anchos. El cabello ondulado añade textura natural que suaviza las líneas angulares.",
+                                recommendations: [
+                                    { name: "Textured Crop", description: "Añade volumen arriba sin ensanchar los lados." },
+                                    { name: "Messy Quiff", description: "Equilibra la frente estrecha y da altura." },
+                                    { name: "Fringe", description: "Suaviza la frente y resalta los ojos." },
+                                    { name: "Side Part", description: "Elegante y define la estructura ósea." },
+                                    { name: "Slick Back", description: "Resalta tus pómulos marcados." }
+                                ]
+                            }),
                             frontPhoto: require('../../../../assets/images/haircuts/front_image.png'),
-                            profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png')
+                            profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
                         })}
                         className="w-11 h-11 rounded-full bg-white items-center justify-center"
                         activeOpacity={0.7}
@@ -49,25 +60,6 @@ export function HomeScreen() {
                         <Text style={{ fontSize: 20 }}>💇‍♂️</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                        onPress={() => handlePress('BaldnessResults', {
-                            analysisResult: JSON.stringify({
-                                baldnessProbability: 45,
-                                density: 6,
-                                texture: 7,
-                                porosity: 5,
-                                volume: 8,
-                                summary: "Mock summary"
-                            }),
-                            frontPhoto: require('../../../../assets/images/haircuts/front_image.png'),
-                            profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
-                            crownPhoto: require('../../../../assets/images/haircuts/profile_pic.png')
-                        })}
-                        className="w-11 h-11 rounded-full bg-white items-center justify-center"
-                        activeOpacity={0.7}
-                    >
-                        <Text style={{ fontSize: 20 }}>👨‍🦲</Text>
-                    </TouchableOpacity>
 
                     <IconButton
                         icon="settings-outline"
@@ -96,6 +88,6 @@ export function HomeScreen() {
                 />
 
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }

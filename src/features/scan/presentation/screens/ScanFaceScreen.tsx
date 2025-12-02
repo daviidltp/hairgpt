@@ -5,12 +5,16 @@ import { useCameraPermissions } from 'expo-camera';
 import React, { useEffect } from 'react';
 import { BackHandler, StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { DefaultImageRepository } from '../../data/repositories/DefaultImageRepository';
 import { AnalysisVisualizer } from '../components/AnalysisVisualizer';
 import { ScanControls } from '../components/ScanControls';
 import { ScanHeader } from '../components/ScanHeader';
 import { ScanOverlay } from '../components/ScanOverlay';
 import { ScanPermissionView } from '../components/ScanPermissionView';
 import { useScanViewModel } from '../hooks/useScanViewModel';
+
+// Repository instance (in a real app, this would come from DI container)
+const defaultImageRepository = new DefaultImageRepository();
 
 type ScanFaceScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ScanFace'>;
 
@@ -76,9 +80,9 @@ export function ScanFaceScreen() {
 
     if (state === 'analyzing' || state === 'results') {
         const isMock = route.params?.mock;
-        // If mock, use default asset, otherwise use captured front photo
+        // If mock, use default asset from repository, otherwise use captured front photo
         const photoUri = isMock
-            ? require('../../../../../assets/images/haircuts/default.png')
+            ? (defaultImageRepository.getDefaultFrontImage() as number)
             : frontPhoto;
 
         return <AnalysisVisualizer photoUri={photoUri} isAnalyzing={progress < 100} />;
