@@ -120,7 +120,7 @@ export function AnalysisVisualizer({ photoUri, isAnalyzing = true, mode = 'hairc
                 <View style={{ width: LOTTIE_SIZE, height: LOTTIE_SIZE, alignItems: 'center', justifyContent: 'center', marginTop: -50 }}>
                     {/* Lottie Background - fills container */}
                     <LottieView
-                        source={require('../../../../../assets/lotties/faceid.json')}
+                        source={require('../../../../../../assets/lotties/faceid.json')}
                         autoPlay
                         loop
                         style={{
@@ -168,3 +168,4 @@ export function AnalysisVisualizer({ photoUri, isAnalyzing = true, mode = 'hairc
         </SafeAreaView>
     );
 }
+

@@ -24,3 +24,4 @@ export function ScanInstructions({ step }: ScanInstructionsProps) {
         </Animated.View>
     );
 }
+

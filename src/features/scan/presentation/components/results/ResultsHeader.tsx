@@ -17,3 +17,4 @@ export function ResultsHeader({ onClose }: ResultsHeaderProps) {
         </View>
     );
 }
+

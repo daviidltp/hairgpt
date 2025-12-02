@@ -1,18 +1,20 @@
 import { PrimaryButton } from '@/core/ui/buttons/PrimaryButton';
 import { HaircutRepository } from '@/features/scan/data/repositories/HaircutRepository';
-import { AnalysisBottomSheet } from '@/features/scan/presentation/components/AnalysisBottomSheet';
-import { AnalysisStatsCard } from '@/features/scan/presentation/components/AnalysisStatsCard';
-import { HaircutSection } from '@/features/scan/presentation/components/HaircutSection';
-import { PhotosDisplay } from '@/features/scan/presentation/components/PhotosDisplay';
-import { ResultsHeader } from '@/features/scan/presentation/components/ResultsHeader';
-import { useAnalysisData } from '@/features/scan/presentation/hooks/useAnalysisData';
-import { useScanResults } from '@/features/scan/presentation/hooks/useScanResults';
 import { ScanResultsScreenNavigationProp, ScanResultsScreenRouteProp } from '@/navigation/AppNavigator';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useMemo, useRef } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+    AnalysisBottomSheet,
+    AnalysisStatsCard,
+    HaircutSection,
+    PhotosDisplay,
+    ResultsHeader
+} from '../components';
+import { useAnalysisData } from '../hooks/useAnalysisData';
+import { useScanResults } from '../hooks/useScanResults';
 
 // Repository instance (in a real app, this would come from DI container)
 const haircutRepository = new HaircutRepository();

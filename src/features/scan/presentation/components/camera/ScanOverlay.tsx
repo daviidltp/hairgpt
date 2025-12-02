@@ -54,3 +54,4 @@ export function ScanOverlay({ cameraRef, isPreview, currentPhoto, instructionTex
         </View>
     );
 }
+

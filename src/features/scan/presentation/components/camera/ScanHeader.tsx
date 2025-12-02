@@ -23,3 +23,4 @@ export function ScanHeader({ title, onBack }: ScanHeaderProps) {
         </View>
     );
 }
+

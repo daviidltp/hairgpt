@@ -61,7 +61,7 @@ export function ScanResultsView({
                 <View className="flex-row gap-4 mt-8 px-6">
                     {/* Face Shape Card */}
                     <ScalePressable
-                        className="flex-1 bg-[#f5f5f5] rounded-[24px] p-5 items-center justify-center border border-[#E6E6E6]"
+                        className="flex-1 bg-surface rounded-[24px] p-5 items-center justify-center border border-gray-200"
                     >
                         <Text className="text-gray-400 text-sm font-medium mb-1">Forma de cara</Text>
                         <Text className="text-primary text-xl font-bold text-center">{faceShape}</Text>
@@ -69,7 +69,7 @@ export function ScanResultsView({
 
                     {/* Hair Type Card */}
                     <ScalePressable
-                        className="flex-1 bg-[#f5f5f5] rounded-[24px] p-5 items-center justify-center border border-[#E6E6E6]"
+                        className="flex-1 bg-surface rounded-[24px] p-5 items-center justify-center border border-gray-200"
                     >
                         <Text className="text-gray-400 text-sm font-medium mb-1">Tipo de pelo</Text>
                         <Text className="text-primary text-xl font-bold text-center">{hairType}</Text>
@@ -90,3 +90,4 @@ export function ScanResultsView({
         </SafeAreaView>
     );
 }
+

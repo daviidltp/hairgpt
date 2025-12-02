@@ -1,3 +1,4 @@
+import { Colors } from '@/core/theme/colors';
 import { ScalePressable } from '@/core/ui';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -28,11 +29,11 @@ export function AnalysisStatsCard({ label, value, onPress }: AnalysisStatsCardPr
 
     return (
         <ScalePressable
-            className="flex-1 bg-[#f5f5f5] rounded-[20px] p-4 items-center justify-center border border-[#E6E6E6] relative"
+            className="flex-1 bg-surface rounded-[20px] p-4 items-center justify-center border border-gray-200 relative min-h-[100px]"
             onPress={handlePress}
         >
             <View className="absolute top-3 right-3">
-                <Ionicons name="information-circle-outline" size={18} color="#9ca3af" />
+                <Ionicons name="information-circle-outline" size={18} color={Colors.textTertiary} />
             </View>
 
             <Text className="text-gray-400 text-lg font-medium mb-2">
@@ -55,3 +56,4 @@ export function AnalysisStatsCard({ label, value, onPress }: AnalysisStatsCardPr
         </ScalePressable>
     );
 }
+

@@ -14,3 +14,4 @@ export function ScanPermissionView({ onRequestPermission }: ScanPermissionViewPr
         </View>
     );
 }
+

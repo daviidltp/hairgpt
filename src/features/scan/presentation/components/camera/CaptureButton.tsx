@@ -45,3 +45,4 @@ export function CaptureButton({ onPress, disabled }: CaptureButtonProps) {
         </TouchableOpacity>
     );
 }
+

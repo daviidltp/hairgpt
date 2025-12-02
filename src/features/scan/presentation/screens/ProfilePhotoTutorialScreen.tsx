@@ -8,10 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { BackHandler, Dimensions, Image, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DefaultImageRepository } from '../../data/repositories/DefaultImageRepository';
-import { AnalysisVisualizer } from '../components/AnalysisVisualizer';
-import { ScanControls } from '../components/ScanControls';
-import { ScanOverlay } from '../components/ScanOverlay';
-import { ScanPermissionView } from '../components/ScanPermissionView';
+import { AnalysisVisualizer, ScanControls, ScanOverlay, ScanPermissionView } from '../components';
 import { useScanViewModel } from '../hooks/useScanViewModel';
 
 const { width, height } = Dimensions.get('window');

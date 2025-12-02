@@ -1,15 +1,12 @@
 import { PrimaryButton } from '@/core/ui';
-import { BaldnessFeatureData, getBaldnessFeatureData } from '@/features/scan/data/baldnessDescriptions';
-import { useBaldnessResults } from '@/features/scan/presentation/hooks/useBaldnessResults';
 import { RootStackParamList } from '@/navigation/AppNavigator';
-import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React from 'react';
 import { Image as RNImage, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AnalysisStatsCard } from '../components/AnalysisStatsCard';
-import { ResultsHeader } from '../components/ResultsHeader';
+import { PropertyCard, PropertyProgressBar, ResultsHeader } from '../components';
+import { useBaldnessResults } from '../hooks/useBaldnessResults';
 
 type BaldnessResultsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'BaldnessResults'>;
 type BaldnessResultsScreenRouteProp = RouteProp<RootStackParamList, 'BaldnessResults'>;
@@ -18,11 +15,6 @@ type BaldnessResultsScreenRouteProp = RouteProp<RootStackParamList, 'BaldnessRes
 export function BaldnessResultsScreen() {
     const navigation = useNavigation<BaldnessResultsScreenNavigationProp>();
     const route = useRoute<BaldnessResultsScreenRouteProp>();
-
-    // Bottom Sheet
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-    const snapPoints = useMemo(() => ['50%'], []);
-    const [selectedFeature, setSelectedFeature] = useState<BaldnessFeatureData | null>(null);
 
     // Get analysis result from route params
     const { analysisResult, frontPhoto, profilePhoto, crownPhoto } = route.params;
@@ -37,24 +29,6 @@ export function BaldnessResultsScreen() {
     const handleReset = () => {
         navigation.navigate('Home');
     };
-
-    const handleCardPress = useCallback((feature: 'density' | 'texture' | 'porosity' | 'volume', score: number) => {
-        const data = getBaldnessFeatureData(feature, score);
-        setSelectedFeature(data);
-        bottomSheetModalRef.current?.present();
-    }, []);
-
-    const renderBackdrop = useCallback(
-        (props: any) => (
-            <BottomSheetBackdrop
-                {...props}
-                disappearsOnIndex={-1}
-                appearsOnIndex={0}
-                opacity={0.5}
-            />
-        ),
-        []
-    );
 
     const renderPhoto = (photo: any, index: number) => (
         <View
@@ -83,83 +57,46 @@ export function BaldnessResultsScreen() {
                     </View>
                 </View>
 
-                {/* Probability Card */}
-                <View className="mx-6 mt-8 bg-white rounded-[24px] p-6 border border-gray-200 shadow-sm">
-                    <Text className="text-center text-lg font-semibold text-black mb-2">
+                {/* Probability Section */}
+                <View className="mt-6 px-6">
+                    <Text className="text-xl font-bold text-black mb-4">
                         Probabilidad de quedarte calvo
                     </Text>
-                    <View className="items-center">
-                        <Text className="text-5xl font-bold text-primary">
-                            {parsedResult.baldnessProbability}%
-                        </Text>
-                        <Text className="text-center text-gray-500 mt-2 text-sm px-4">
-                            {parsedResult.summary}
-                        </Text>
-                    </View>
+                    <PropertyProgressBar 
+                        label="Probabilidad" 
+                        value={parsedResult.baldnessProbability / 10} 
+                    />
+                    <Text className="text-gray-600 text-base leading-6 mt-2">
+                        {parsedResult.summary}
+                    </Text>
                 </View>
 
-                {/* Stats Grid */}
-                <View className="flex-row flex-wrap gap-2 px-6 mt-6 justify-between">
-                    <View className="w-[48%]">
-                        <AnalysisStatsCard
-                            label="Densidad"
-                            value={`${parsedResult.density}/10`}
-                            onPress={() => handleCardPress('density', parsedResult.density)}
-                        />
-                    </View>
-                    <View className="w-[48%]">
-                        <AnalysisStatsCard
-                            label="Textura"
-                            value={`${parsedResult.texture}/10`}
-                            onPress={() => handleCardPress('texture', parsedResult.texture)}
-                        />
-                    </View>
-                    <View className="w-[48%]">
-                        <AnalysisStatsCard
-                            label="Porosidad"
-                            value={`${parsedResult.porosity}/10`}
-                            onPress={() => handleCardPress('porosity', parsedResult.porosity)}
-                        />
-                    </View>
-                    <View className="w-[48%]">
-                        <AnalysisStatsCard
-                            label="Volumen"
-                            value={`${parsedResult.volume}/10`}
-                            onPress={() => handleCardPress('volume', parsedResult.volume)}
-                        />
+                {/* Hair Properties */}
+                <View className="mt-8 px-6">
+                    <Text className="text-xl font-bold text-black mb-4">
+                        Estado del cabello
+                    </Text>
+                    <View className="flex-row flex-wrap justify-between gap-y-3">
+                        <View className="w-[48%]">
+                            <PropertyCard label="Densidad" value={parsedResult.density} />
+                        </View>
+                        <View className="w-[48%]">
+                            <PropertyCard label="Textura" value={parsedResult.texture} />
+                        </View>
+                        <View className="w-[48%]">
+                            <PropertyCard label="Porosidad" value={parsedResult.porosity} />
+                        </View>
+                        <View className="w-[48%]">
+                            <PropertyCard label="Volumen" value={parsedResult.volume} />
+                        </View>
                     </View>
                 </View>
 
                 <View className="h-10" />
                 <View className="px-6">
-                    <PrimaryButton label="Start Analysis" onPress={handleReset} />
+                    <PrimaryButton label="Nuevo análisis" onPress={handleReset} />
                 </View>
             </ScrollView>
-
-            <BottomSheetModal
-                ref={bottomSheetModalRef}
-                index={0}
-                snapPoints={snapPoints}
-                backdropComponent={renderBackdrop}
-                enablePanDownToClose
-                backgroundStyle={{ backgroundColor: 'white', borderRadius: 24 }}
-            >
-                <BottomSheetView className="flex-1 px-6 pt-4 pb-8">
-                    {selectedFeature && (
-                        <View className="flex-1">
-                            <Text className="text-2xl font-bold text-primary mb-2 text-center">
-                                {selectedFeature.title}
-                            </Text>
-                            <Text className="text-lg font-semibold text-black mb-4 text-center">
-                                {selectedFeature.levelDescription}
-                            </Text>
-                            <Text className="text-base text-gray-600 leading-6 text-center">
-                                {selectedFeature.description}
-                            </Text>
-                        </View>
-                    )}
-                </BottomSheetView>
-            </BottomSheetModal>
         </SafeAreaView>
     );
 }

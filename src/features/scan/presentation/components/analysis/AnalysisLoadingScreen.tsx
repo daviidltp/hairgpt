@@ -1,10 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
-
-const { width } = Dimensions.get('window');
 
 const CHECKLIST_ITEMS = [
     { id: 1, label: 'Escaneando facciones...', threshold: 10 },
@@ -91,3 +89,4 @@ export function AnalysisLoadingScreen({ progress }: Props) {
         </View>
     );
 }
+

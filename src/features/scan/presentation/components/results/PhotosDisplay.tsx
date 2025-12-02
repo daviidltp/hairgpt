@@ -32,3 +32,4 @@ export function PhotosDisplay({ frontPhoto, profilePhoto }: PhotosDisplayProps) 
         </View>
     );
 }
+

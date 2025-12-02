@@ -1,0 +1,2 @@
+export { PropertyProgressBar } from './PropertyProgressBar';
+

@@ -49,3 +49,4 @@ export function HaircutSection({ title, rank, images, onImagePress }: HaircutSec
         </View>
     );
 }
+

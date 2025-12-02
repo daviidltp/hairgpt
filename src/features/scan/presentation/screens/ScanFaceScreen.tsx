@@ -6,11 +6,7 @@ import React, { useEffect } from 'react';
 import { BackHandler, StatusBar, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DefaultImageRepository } from '../../data/repositories/DefaultImageRepository';
-import { AnalysisVisualizer } from '../components/AnalysisVisualizer';
-import { ScanControls } from '../components/ScanControls';
-import { ScanHeader } from '../components/ScanHeader';
-import { ScanOverlay } from '../components/ScanOverlay';
-import { ScanPermissionView } from '../components/ScanPermissionView';
+import { AnalysisVisualizer, ScanControls, ScanHeader, ScanOverlay, ScanPermissionView } from '../components';
 import { useScanViewModel } from '../hooks/useScanViewModel';
 
 // Repository instance (in a real app, this would come from DI container)

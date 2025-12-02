@@ -16,3 +16,4 @@ export function RecommendationsSection({ analysisResult }: RecommendationsSectio
         </View>
     );
 }
+
