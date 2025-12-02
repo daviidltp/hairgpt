@@ -103,7 +103,7 @@ export function ScanFaceScreen() {
             ? (defaultImageRepository.getDefaultFrontImage() as number)
             : frontPhoto;
 
-        return <AnalysisVisualizer photoUri={photoUri} isAnalyzing={progress < 100} />;
+        return <AnalysisVisualizer photoUri={photoUri} isAnalyzing={progress < 100} mode={route.params?.mode} />;
     }
 
     if (!permission) return <View />;

@@ -2,8 +2,9 @@ import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import LottieView from 'lottie-react-native';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Text, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { AnalysisChecklist } from './AnalysisChecklist';
 
 // ============================================
 // HAPTIC CONFIGURATION CONSTANTS
@@ -12,6 +13,7 @@ const HAPTIC_INTERVAL_MS = 50; // Interval between haptic pulses
 const HAPTIC_DURATION_MS = 2500; // Duration of haptic feedback
 const HAPTIC_PAUSE_MS = 1000; // Pause between haptic cycles
 const HAPTIC_STYLE = Haptics.ImpactFeedbackStyle.Light; // Haptic feedback style
+const MAX_CHECKS = 5; // Number of checklist items
 
 // ============================================
 // LAYOUT CONSTANTS
@@ -20,34 +22,31 @@ const { width } = Dimensions.get('window');
 const IMAGE_SIZE = width * 0.7;
 const LOTTIE_SIZE = width * 1.4;
 
-// ============================================
-// ANALYSIS TEXTS
-// ============================================
-const ANALYSIS_TEXTS = [
-    'Analizando estructura facial...',
-    'Detectando forma de rostro...',
-    'Evaluando proporciones...',
-    'Identificando líneas de corte ideales...',
-    'Procesando textura del cabello...',
-    'Calculando volumen óptimo...',
-    'Analizando simetría facial...',
-    'Determinando estilos compatibles...',
-    'Evaluando tendencias personalizadas...',
-    'Finalizando recomendaciones...',
-];
-
 interface AnalysisVisualizerProps {
     photoUri: string | number | null;
     isAnalyzing?: boolean;
+    mode?: 'haircut' | 'baldness';
 }
 
-export function AnalysisVisualizer({ photoUri, isAnalyzing = true }: AnalysisVisualizerProps) {
-    const [currentTextIndex, setCurrentTextIndex] = useState(0);
+export function AnalysisVisualizer({ photoUri, isAnalyzing = true, mode = 'haircut' }: AnalysisVisualizerProps) {
+    const [completedChecks, setCompletedChecks] = useState(0);
+    const [activeCheckIndex, setActiveCheckIndex] = useState(0);
+
+    // Complete last check when analysis is done
+    useEffect(() => {
+        if (!isAnalyzing && completedChecks === MAX_CHECKS - 1) {
+            const timer = setTimeout(() => {
+                setCompletedChecks(MAX_CHECKS);
+            }, 500); // Small delay for smooth transition
+            return () => clearTimeout(timer);
+        }
+    }, [isAnalyzing, completedChecks]);
 
     useEffect(() => {
         let hapticInterval: number | null = null;
         let cycleTimeout: number | null = null;
         let restartTimeout: number | null = null;
+        let checkTimeout: number | null = null;
 
         const cleanup = () => {
             if (hapticInterval) {
@@ -61,6 +60,10 @@ export function AnalysisVisualizer({ photoUri, isAnalyzing = true }: AnalysisVis
             if (restartTimeout) {
                 clearTimeout(restartTimeout);
                 restartTimeout = null;
+            }
+            if (checkTimeout) {
+                clearTimeout(checkTimeout);
+                checkTimeout = null;
             }
         };
 
@@ -77,11 +80,24 @@ export function AnalysisVisualizer({ photoUri, isAnalyzing = true }: AnalysisVis
                     hapticInterval = null;
                 }
 
-                // After pause, restart the cycle and update text
+                // Complete next check at half of pause duration
+                checkTimeout = setTimeout(() => {
+                    setCompletedChecks((prev) => {
+                        const nextValue = prev + 1;
+                        // Don't complete the last check until analysis is done
+                        if (nextValue >= MAX_CHECKS && isAnalyzing) {
+                            return prev;
+                        }
+                        return Math.min(nextValue, MAX_CHECKS);
+                    });
+                    
+                    // Move to next active check
+                    setActiveCheckIndex((prev) => Math.min(prev + 1, MAX_CHECKS - 1));
+                }, HAPTIC_PAUSE_MS / 2);
+
+                // After pause, restart the cycle
                 restartTimeout = setTimeout(() => {
-                    if (isAnalyzing) {
-                        // Update text to next in sequence
-                        setCurrentTextIndex((prev) => (prev + 1) % ANALYSIS_TEXTS.length);
+                    if (isAnalyzing || completedChecks < MAX_CHECKS - 1) {
                         startHapticCycle();
                     }
                 }, HAPTIC_PAUSE_MS);
@@ -99,9 +115,9 @@ export function AnalysisVisualizer({ photoUri, isAnalyzing = true }: AnalysisVis
 
     return (
         <SafeAreaView className="flex-1 bg-white">
-            <View className="items-center pt-0">
+            <View className="flex-1 items-center pt-0 px-6">
                 {/* Anchor Container - sized to Lottie for proper alignment */}
-                <View style={{ width: LOTTIE_SIZE, height: LOTTIE_SIZE, alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ width: LOTTIE_SIZE, height: LOTTIE_SIZE, alignItems: 'center', justifyContent: 'center', marginTop: -50 }}>
                     {/* Lottie Background - fills container */}
                     <LottieView
                         source={require('../../../../../assets/lotties/faceid.json')}
@@ -139,10 +155,15 @@ export function AnalysisVisualizer({ photoUri, isAnalyzing = true }: AnalysisVis
                     </View>
                 </View>
 
-                {/* Analysis Text - lowercase with technical feel */}
-                <Text className="mt-4 text-base font-normal text-gray-500 tracking-wide px-8 text-center">
-                    {ANALYSIS_TEXTS[currentTextIndex]}
-                </Text>
+                {/* Analysis Checklist Card */}
+                <View style={{ marginTop: -80, width: '100%' }}>
+                    <AnalysisChecklist 
+                        completedCount={completedChecks} 
+                        activeCheckIndex={activeCheckIndex}
+                        isAnalyzing={isAnalyzing}
+                        mode={mode}
+                    />
+                </View>
             </View>
         </SafeAreaView>
     );
