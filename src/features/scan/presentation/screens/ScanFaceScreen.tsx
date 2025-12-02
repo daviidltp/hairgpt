@@ -22,6 +22,12 @@ export function ScanFaceScreen() {
     const navigation = useNavigation<ScanFaceScreenNavigationProp>();
     const route = useRoute<any>();
     const [permission, requestPermission] = useCameraPermissions();
+
+    // Determine initial state based on photoType parameter
+    const photoType = route.params?.photoType || 'front';
+    const initialState = photoType === 'front' ? 'scanning_front' :
+        photoType === 'profile' ? 'scanning_profile' : 'scanning_crown';
+
     const {
         state,
         cameraRef,
@@ -32,13 +38,14 @@ export function ScanFaceScreen() {
         progress,
         capture,
         pickImage,
-        confirmPhoto,
+        confirmPhoto: vmConfirmPhoto,
         retakePhoto,
         reset,
     } = useScanViewModel({
         initialMock: route.params?.mock,
         mockResults: route.params?.mockResults,
-        mode: route.params?.mode
+        mode: route.params?.mode,
+        initialState: initialState
     });
 
     useEffect(() => {
@@ -77,6 +84,17 @@ export function ScanFaceScreen() {
             }
         }
     }, [state, analysisResult, frontPhoto, profilePhoto, crownPhoto, navigation, route.params?.mode]);
+
+    // Custom confirm handler to navigate to tutorial screens
+    const confirmPhoto = () => {
+        if (state === 'preview_front') {
+            // Navigate to profile tutorial instead of directly to profile camera
+            navigation.navigate('ProfilePhotoTutorial', { mode: route.params?.mode });
+        } else {
+            // For profile and crown, use the original confirmPhoto logic
+            vmConfirmPhoto();
+        }
+    };
 
     if (state === 'analyzing' || state === 'results') {
         const isMock = route.params?.mock;

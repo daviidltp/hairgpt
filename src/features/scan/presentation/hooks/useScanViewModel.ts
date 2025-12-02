@@ -28,17 +28,35 @@ const PROGRESS_CONFIG = {
     FAST_END: { threshold: 99, stepTime: 200 },    // 80-99%: Fast
 };
 
-export function useScanViewModel({ initialMock = false, mockResults = false, mode = 'haircut' }: { initialMock?: boolean; mockResults?: boolean; mode?: 'haircut' | 'baldness' } = {}) {
+export function useScanViewModel({
+    initialMock = false,
+    mockResults = false,
+    mode = 'haircut',
+    initialState = 'scanning_front',
+    initialFrontPhoto = null,
+    initialFrontBase64 = null,
+    initialProfilePhoto = null,
+    initialProfileBase64 = null
+}: {
+    initialMock?: boolean;
+    mockResults?: boolean;
+    mode?: 'haircut' | 'baldness';
+    initialState?: ScanState;
+    initialFrontPhoto?: string | number | null;
+    initialFrontBase64?: string | null;
+    initialProfilePhoto?: string | number | null;
+    initialProfileBase64?: string | null;
+} = {}) {
     const [state, setState] = useState<ScanState>(
-        mockResults ? 'results' : (initialMock ? 'analyzing' : 'scanning_front')
+        mockResults ? 'results' : (initialMock ? 'analyzing' : initialState)
     );
-    const [frontPhoto, setFrontPhoto] = useState<string | number | null>(null);
-    const [profilePhoto, setProfilePhoto] = useState<string | number | null>(null);
+    const [frontPhoto, setFrontPhoto] = useState<string | number | null>(initialFrontPhoto);
+    const [profilePhoto, setProfilePhoto] = useState<string | number | null>(initialProfilePhoto);
     const [crownPhoto, setCrownPhoto] = useState<string | number | null>(null);
 
     // Base64 storage
-    const [frontBase64, setFrontBase64] = useState<string | null>(null);
-    const [profileBase64, setProfileBase64] = useState<string | null>(null);
+    const [frontBase64, setFrontBase64] = useState<string | null>(initialFrontBase64);
+    const [profileBase64, setProfileBase64] = useState<string | null>(initialProfileBase64);
     const [crownBase64, setCrownBase64] = useState<string | null>(null);
 
     const [analysisResult, setAnalysisResult] = useState<string | null>(null);
@@ -279,6 +297,9 @@ export function useScanViewModel({ initialMock = false, mockResults = false, mod
         frontPhoto,
         profilePhoto,
         crownPhoto,
+        frontBase64,
+        profileBase64,
+        crownBase64,
         analysisResult,
         progress,
         capture,

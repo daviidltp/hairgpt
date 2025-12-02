@@ -4,8 +4,13 @@ import { HomeScreen } from '@/features/home/presentation/HomeScreen';
 import { FakePaywall } from '@/features/onboarding/presentation/components/FakePaywall';
 import { OnboardingScreen } from '@/features/onboarding/presentation/OnboardingScreen';
 import { WelcomeScreen } from '@/features/onboarding/presentation/WelcomeScreen';
+import { BaldnessCrownTutorialScreen } from '@/features/scan/presentation/screens/BaldnessCrownTutorialScreen';
+import { BaldnessFrontTutorialScreen } from '@/features/scan/presentation/screens/BaldnessFrontTutorialScreen';
+import { BaldnessProfileTutorialScreen } from '@/features/scan/presentation/screens/BaldnessProfileTutorialScreen';
 import { BaldnessResultsScreen } from '@/features/scan/presentation/screens/BaldnessResultsScreen';
+import { FrontPhotoTutorialScreen } from '@/features/scan/presentation/screens/FrontPhotoTutorialScreen';
 import { ImageGalleryScreen } from '@/features/scan/presentation/screens/ImageGalleryScreen';
+import { ProfilePhotoTutorialScreen } from '@/features/scan/presentation/screens/ProfilePhotoTutorialScreen';
 import { ScanFaceScreen } from '@/features/scan/presentation/screens/ScanFaceScreen';
 import { ScanResultsScreen } from '@/features/scan/presentation/screens/ScanResultsScreen';
 import { SettingsScreen } from '@/features/settings/presentation/SettingsScreen';
@@ -19,7 +24,12 @@ export type RootStackParamList = {
     Home: undefined;
     Settings: undefined;
     Paywall: undefined;
-    ScanFace: { mock?: boolean; mockResults?: boolean; mode?: 'haircut' | 'baldness' } | undefined;
+    FrontPhotoTutorial: { mode?: 'haircut' | 'baldness' } | undefined;
+    ProfilePhotoTutorial: { mode?: 'haircut' | 'baldness'; frontPhoto?: string | number; frontBase64?: string } | undefined;
+    BaldnessFrontTutorial: undefined;
+    BaldnessProfileTutorial: { frontPhoto?: string | number; frontBase64?: string } | undefined;
+    BaldnessCrownTutorial: { frontPhoto?: string | number; frontBase64?: string; profilePhoto?: string | number; profileBase64?: string } | undefined;
+    ScanFace: { mock?: boolean; mockResults?: boolean; mode?: 'haircut' | 'baldness'; photoType?: 'front' | 'profile' | 'crown' } | undefined;
     ScanResults: {
         analysisResult: string;
         frontPhoto: any;
@@ -95,6 +105,46 @@ export function AppNavigator() {
                         options={{
                             gestureEnabled: true,
                             gestureDirection: 'horizontal',
+                            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="FrontPhotoTutorial"
+                        component={FrontPhotoTutorialScreen}
+                        options={{
+                            gestureEnabled: true,
+                            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="ProfilePhotoTutorial"
+                        component={ProfilePhotoTutorialScreen}
+                        options={{
+                            gestureEnabled: true,
+                            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="BaldnessFrontTutorial"
+                        component={BaldnessFrontTutorialScreen}
+                        options={{
+                            gestureEnabled: true,
+                            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="BaldnessProfileTutorial"
+                        component={BaldnessProfileTutorialScreen}
+                        options={{
+                            gestureEnabled: true,
+                            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                        }}
+                    />
+                    <Stack.Screen
+                        name="BaldnessCrownTutorial"
+                        component={BaldnessCrownTutorialScreen}
+                        options={{
+                            gestureEnabled: true,
                             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                         }}
                     />

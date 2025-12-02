@@ -3,8 +3,9 @@ import React from 'react';
 import { Dimensions, Image as RNImage, Text, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
-const OVAL_WIDTH = width * 0.85;
-const OVAL_HEIGHT = height * 0.55;
+const FRAME_HEIGHT = height * 0.5; // 60% of screen height
+const FRAME_WIDTH = width * 0.9; // Slightly narrower than screen
+const BORDER_RADIUS = 20;
 
 interface ScanOverlayProps {
     cameraRef: React.RefObject<CameraView | null>;
@@ -18,13 +19,13 @@ export function ScanOverlay({ cameraRef, isPreview, currentPhoto, instructionTex
         <View className="flex-1 items-center justify-center relative">
             <View
                 style={{
-                    width: OVAL_WIDTH,
-                    height: OVAL_HEIGHT,
-                    borderRadius: OVAL_WIDTH / 2,
+                    width: FRAME_WIDTH,
+                    height: FRAME_HEIGHT,
+                    borderRadius: BORDER_RADIUS,
                     overflow: 'hidden',
-                    borderWidth: 4,
-                    borderColor: 'black',
-                    backgroundColor: 'black'
+                    borderWidth: 0,
+                    backgroundColor: 'black',
+                    marginTop: -100
                 }}
             >
                 <CameraView
