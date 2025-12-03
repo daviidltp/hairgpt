@@ -63,16 +63,17 @@ export function ProfilePhotoTutorialScreen() {
     // Navigate to results screen when analysis is complete
     useEffect(() => {
         if (state === 'results' && analysisResult) {
+            // Pass analysis result data directly
             if (route.params?.mode === 'baldness') {
                 navigation.navigate('BaldnessResults', {
-                    analysisResult,
+                    analysisData: analysisResult,
                     frontPhoto: frontPhoto,
                     profilePhoto,
                     crownPhoto: null,
                 });
             } else {
                 navigation.navigate('ScanResults', {
-                    analysisResult,
+                    analysisData: analysisResult,
                     frontPhoto: frontPhoto,
                     profilePhoto,
                 });

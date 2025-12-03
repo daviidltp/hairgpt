@@ -9,21 +9,14 @@ import React from 'react';
 import { Dimensions, Image as RNImage, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PropertyCard, PropertyProgressBar, ResultsHeader } from '../components';
-import { useBaldnessResults } from '../hooks/useBaldnessResults';
 
 type BaldnessResultsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'BaldnessResults'>;
 type BaldnessResultsScreenRouteProp = RouteProp<RootStackParamList, 'BaldnessResults'>;
 
-
 export function BaldnessResultsScreen() {
     const navigation = useNavigation<BaldnessResultsScreenNavigationProp>();
     const route = useRoute<BaldnessResultsScreenRouteProp>();
-
-    // Get analysis result from route params
-    const { analysisResult, frontPhoto, profilePhoto, crownPhoto } = route.params;
-
-    // Parse the analysis result using ViewModel hook
-    const parsedResult = useBaldnessResults(analysisResult);
+    const { analysisData, frontPhoto, profilePhoto, crownPhoto } = route.params;
 
     const handleClose = () => {
         navigation.navigate('Home');
@@ -88,7 +81,7 @@ export function BaldnessResultsScreen() {
         return `Fase ${index + 1}`;
     };
 
-    const activeNorwoodIndex = getNorwoodIndex(parsedResult.norwoodStage);
+    const activeNorwoodIndex = getNorwoodIndex(analysisData.norwoodStage);
 
     return (
         <SafeAreaView className="flex-1 bg-background" edges={['top']}>
@@ -110,10 +103,10 @@ export function BaldnessResultsScreen() {
                     </Text>
                     <PropertyProgressBar
                         label="Probabilidad"
-                        value={parsedResult.baldnessProbability / 10}
+                        value={analysisData.baldnessProbability / 10}
                     />
                     <Text className="text-gray-600 text-base leading-6 mt-2">
-                        {parsedResult.summary}
+                        {analysisData.summary}
                     </Text>
                 </View>
 
@@ -140,7 +133,7 @@ export function BaldnessResultsScreen() {
                                 <View className="flex-row justify-between items-center mb-3">
                                     <View>
                                         <Text className="text-gray-400 text-base font-medium">Escala Norwood</Text>
-                                        <Text className="text-xl font-bold text-black">{formatNorwoodStage(parsedResult.norwoodStage)}</Text>
+                                        <Text className="text-xl font-bold text-black">{formatNorwoodStage(analysisData.norwoodStage)}</Text>
                                     </View>
                                     <Ionicons name="information-circle-outline" size={18} color={Colors.textTertiary} />
                                 </View>
@@ -162,10 +155,10 @@ export function BaldnessResultsScreen() {
 
                             <View className="flex-row flex-wrap justify-between gap-y-3">
                                 <View className="w-[48%]">
-                                    <PropertyCard label="Entradas" value={parsedResult.recession || 0} />
+                                    <PropertyCard label="Entradas" value={analysisData.recession || 0} />
                                 </View>
                                 <View className="w-[48%]">
-                                    <PropertyCard label="Coronilla" value={parsedResult.crownDensity || 0} />
+                                    <PropertyCard label="Coronilla" value={analysisData.crownDensity || 0} />
                                 </View>
                             </View>
                         </View>
@@ -174,16 +167,16 @@ export function BaldnessResultsScreen() {
                         <View style={{ width: screenWidth }} className="px-6">
                             <View className="flex-row flex-wrap justify-between gap-y-3">
                                 <View className="w-[48%]">
-                                    <PropertyCard label="Densidad" value={parsedResult.density} />
+                                    <PropertyCard label="Densidad" value={analysisData.density} />
                                 </View>
                                 <View className="w-[48%]">
-                                    <PropertyCard label="Textura" value={parsedResult.texture} />
+                                    <PropertyCard label="Textura" value={analysisData.texture} />
                                 </View>
                                 <View className="w-[48%]">
-                                    <PropertyCard label="Porosidad" value={parsedResult.porosity} />
+                                    <PropertyCard label="Porosidad" value={analysisData.porosity} />
                                 </View>
                                 <View className="w-[48%]">
-                                    <PropertyCard label="Volumen" value={parsedResult.volume} />
+                                    <PropertyCard label="Volumen" value={analysisData.volume} />
                                 </View>
                             </View>
                         </View>

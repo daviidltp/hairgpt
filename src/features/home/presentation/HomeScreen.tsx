@@ -1,4 +1,6 @@
 import { IconButton } from '@/core/ui';
+import { AnalysisRepository } from '@/features/scan/data/repositories/AnalysisRepository';
+import { BaldnessAnalysisRepository } from '@/features/scan/data/repositories/BaldnessAnalysisRepository';
 import { RootStackParamList } from '@/navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -10,12 +12,45 @@ import { HomeCard } from './components/HomeCard';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
+// Repository instances
+const analysisRepository = new AnalysisRepository();
+const baldnessRepository = new BaldnessAnalysisRepository();
+
 export function HomeScreen() {
     const navigation = useNavigation<HomeScreenNavigationProp>();
 
     const handlePress = (screen: keyof RootStackParamList, params?: any) => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         navigation.navigate(screen, params);
+    };
+
+    const handleMockHaircutAnalysis = async () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        try {
+            const analysisData = await analysisRepository.fetchAnalysisById('mock-1');
+            navigation.navigate('ScanResults', {
+                analysisData,
+                frontPhoto: require('../../../../assets/images/haircuts/front_image.png'),
+                profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
+            });
+        } catch (e) {
+            console.error('Failed to load mock analysis:', e);
+        }
+    };
+
+    const handleMockBaldnessAnalysis = async () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        try {
+            const analysisData = await baldnessRepository.fetchBaldnessAnalysisById('mock-baldness-1');
+            navigation.navigate('BaldnessResults', {
+                analysisData,
+                frontPhoto: require('../../../../assets/images/haircuts/front_image.png'),
+                profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
+                crownPhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
+            });
+        } catch (e) {
+            console.error('Failed to load mock baldness analysis:', e);
+        }
     };
 
     return (
@@ -38,22 +73,7 @@ export function HomeScreen() {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={() => handlePress('ScanResults', {
-                            analysisResult: JSON.stringify({
-                                faceShape: "Diamante",
-                                hairType: "Ondulado",
-                                explanation: "Tu rostro diamante se beneficia de volumen en la parte superior para equilibrar los pómulos anchos. El cabello ondulado añade textura natural que suaviza las líneas angulares.",
-                                recommendations: [
-                                    { name: "Textured Crop", description: "Añade volumen arriba sin ensanchar los lados." },
-                                    { name: "Messy Quiff", description: "Equilibra la frente estrecha y da altura." },
-                                    { name: "Fringe", description: "Suaviza la frente y resalta los ojos." },
-                                    { name: "Side Part", description: "Elegante y define la estructura ósea." },
-                                    { name: "Slick Back", description: "Resalta tus pómulos marcados." }
-                                ]
-                            }),
-                            frontPhoto: require('../../../../assets/images/haircuts/front_image.png'),
-                            profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
-                        })}
+                        onPress={handleMockHaircutAnalysis}
                         className="w-11 h-11 rounded-full bg-white items-center justify-center"
                         activeOpacity={0.7}
                     >
@@ -61,22 +81,7 @@ export function HomeScreen() {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={() => handlePress('BaldnessResults', {
-                            analysisResult: JSON.stringify({
-                                baldnessProbability: 75,
-                                norwoodStage: "3-Vertex",
-                                recession: 7,
-                                crownDensity: 4,
-                                density: 40,
-                                texture: 60,
-                                porosity: 30,
-                                volume: 20,
-                                summary: "Se observa un adelgazamiento significativo en la zona de la coronilla y entradas pronunciadas, indicativo de alopecia androgenética en etapa temprana a media."
-                            }),
-                            frontPhoto: require('../../../../assets/images/haircuts/front_image.png'),
-                            profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
-                            crownPhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
-                        })}
+                        onPress={handleMockBaldnessAnalysis}
                         className="w-11 h-11 rounded-full bg-white items-center justify-center"
                         activeOpacity={0.7}
                     >

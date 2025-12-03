@@ -2,6 +2,7 @@ import { BaldnessAnalysisResult } from '../../domain/entities/BaldnessAnalysisRe
 import { IBaldnessAnalysisRepository } from '../../domain/repositories/IBaldnessAnalysisRepository';
 import { BaldnessAnalysisResultSchema } from '../dtos/BaldnessAnalysisResultDTO';
 import { mapBaldnessAnalysisResultDtoToEntity } from '../mappers/BaldnessAnalysisMapper';
+import { mockBaldnessDatabase } from '../mock/mockBaldnessDatabase';
 
 export class BaldnessAnalysisRepository implements IBaldnessAnalysisRepository {
     parseBaldnessResult(rawJson: string): BaldnessAnalysisResult {
@@ -31,6 +32,9 @@ export class BaldnessAnalysisRepository implements IBaldnessAnalysisRepository {
             // Return default error state
             return {
                 baldnessProbability: 0,
+                norwoodStage: 'N/A',
+                recession: 0,
+                crownDensity: 0,
                 density: 0,
                 texture: 0,
                 porosity: 0,
@@ -38,5 +42,30 @@ export class BaldnessAnalysisRepository implements IBaldnessAnalysisRepository {
                 summary: 'Error parsing results',
             };
         }
+    }
+
+    async fetchBaldnessAnalysisById(id: string): Promise<BaldnessAnalysisResult> {
+        // Simulate API call with latency
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const dto = mockBaldnessDatabase[id];
+
+                if (!dto) {
+                    reject(new Error(`Baldness analysis with id ${id} not found`));
+                    return;
+                }
+
+                try {
+                    // Validate with Zod
+                    const validatedDto = BaldnessAnalysisResultSchema.parse(dto);
+                    // Map to Domain Entity
+                    const entity = mapBaldnessAnalysisResultDtoToEntity(validatedDto);
+                    resolve(entity);
+                } catch (e) {
+                    console.error('Failed to fetch baldness analysis:', e);
+                    reject(e);
+                }
+            }, 800); // Simulate 800ms API latency
+        });
     }
 }
