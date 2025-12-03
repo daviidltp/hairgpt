@@ -1,4 +1,5 @@
 import { IconButton, PrimaryButton } from '@/core/ui';
+import { BaldnessAnalysisRepository } from '@/features/scan/data/repositories/BaldnessAnalysisRepository';
 import { RootStackParamList } from '@/navigation/AppNavigator';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -16,6 +17,7 @@ const FRAME_HEIGHT = height * 0.5;
 const FRAME_WIDTH = width * 0.9;
 
 const defaultImageRepository = new DefaultImageRepository();
+const baldnessRepository = new BaldnessAnalysisRepository();
 
 type BaldnessCrownTutorialNavigationProp = StackNavigationProp<RootStackParamList>;
 
@@ -66,8 +68,10 @@ export function BaldnessCrownTutorialScreen() {
     // Navigate to results screen when analysis is complete
     useEffect(() => {
         if (state === 'results' && analysisResult) {
+            // Parse analysis result before navigation
+            const parsedData = baldnessRepository.parseBaldnessResult(analysisResult);
             navigation.navigate('BaldnessResults', {
-                analysisResult,
+                analysisData: parsedData,
                 frontPhoto: frontPhoto,
                 profilePhoto: profilePhoto,
                 crownPhoto: crownPhoto,
