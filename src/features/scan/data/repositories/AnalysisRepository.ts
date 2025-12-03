@@ -2,6 +2,7 @@ import { AnalysisResult } from '../../domain/entities/AnalysisResult';
 import { IAnalysisRepository } from '../../domain/repositories/IAnalysisRepository';
 import { AnalysisResultSchema } from '../dtos/AnalysisResultDTO';
 import { mapAnalysisResultDtoToEntity } from '../mappers/AnalysisMapper';
+import { mockHaircutDatabase } from '../mock/mockHaircutDatabase';
 
 export class AnalysisRepository implements IAnalysisRepository {
     parseAnalysisResult(rawJson: string): AnalysisResult {
@@ -32,5 +33,30 @@ export class AnalysisRepository implements IAnalysisRepository {
                 recommendations: [],
             };
         }
+    }
+
+    async fetchAnalysisById(id: string): Promise<AnalysisResult> {
+        // Simulate API call with latency
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                const dto = mockHaircutDatabase[id];
+
+                if (!dto) {
+                    reject(new Error(`Analysis with id ${id} not found`));
+                    return;
+                }
+
+                try {
+                    // Validate with Zod
+                    const validatedDto = AnalysisResultSchema.parse(dto);
+                    // Map to Domain Entity
+                    const entity = mapAnalysisResultDtoToEntity(validatedDto);
+                    resolve(entity);
+                } catch (e) {
+                    console.error('Failed to fetch analysis:', e);
+                    reject(e);
+                }
+            }, 800); // Simulate 800ms API latency
+        });
     }
 }

@@ -31,12 +31,12 @@ export type RootStackParamList = {
     BaldnessCrownTutorial: { frontPhoto?: string | number; frontBase64?: string; profilePhoto?: string | number; profileBase64?: string } | undefined;
     ScanFace: { mock?: boolean; mockResults?: boolean; mode?: 'haircut' | 'baldness'; photoType?: 'front' | 'profile' | 'crown' } | undefined;
     ScanResults: {
-        analysisResult: string;
+        analysisData: any; // AnalysisResult
         frontPhoto: any;
         profilePhoto: any;
     };
     BaldnessResults: {
-        analysisResult: string;
+        analysisData: any; // BaldnessAnalysisResult
         frontPhoto: any;
         profilePhoto: any;
         crownPhoto: any;

@@ -14,7 +14,6 @@ import {
     ResultsHeader
 } from '../components';
 import { useAnalysisData } from '../hooks/useAnalysisData';
-import { useScanResults } from '../hooks/useScanResults';
 
 // Repository instance (in a real app, this would come from DI container)
 const haircutRepository = new HaircutRepository();
@@ -23,19 +22,12 @@ const haircutRepository = new HaircutRepository();
 export function ScanResultsScreen() {
     const navigation = useNavigation<ScanResultsScreenNavigationProp>();
     const route = useRoute<ScanResultsScreenRouteProp>();
-    const { analysisResult, frontPhoto, profilePhoto } = route.params as {
-        analysisResult: string;
-        frontPhoto: any;
-        profilePhoto: any;
-    };
+    const { analysisData, frontPhoto, profilePhoto } = route.params;
 
     // BottomSheet refs
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const snapPoints = useMemo(() => ['45%'], []);
     const [modalContent, setModalContent] = React.useState<'face' | 'hair'>('face');
-
-    // Parse the analysis result using ViewModel hook
-    const parsedResult = useScanResults(analysisResult);
 
     const handleClose = () => {
         navigation.navigate('Home');
@@ -72,7 +64,7 @@ export function ScanResultsScreen() {
 
     const modalData = useAnalysisData(
         modalContent,
-        modalContent === 'face' ? parsedResult.faceShape : parsedResult.hairType
+        modalContent === 'face' ? analysisData.faceShape : analysisData.hairType
     );
 
     return (
@@ -86,12 +78,12 @@ export function ScanResultsScreen() {
                     <View className="flex-row gap-2 mt-8 px-6">
                         <AnalysisStatsCard
                             label="Forma de cara"
-                            value={parsedResult.faceShape}
+                            value={analysisData.faceShape}
                             onPress={() => handlePresentModalPress('face')}
                         />
                         <AnalysisStatsCard
                             label="Tipo de pelo"
-                            value={parsedResult.hairType}
+                            value={analysisData.hairType}
                             onPress={() => handlePresentModalPress('hair')}
                         />
                     </View>
@@ -102,11 +94,11 @@ export function ScanResultsScreen() {
 
                     <View className="px-6 mb-8">
                         <Text className="text-lg text-foreground leading-relaxed">
-                            {parsedResult.explanation}
+                            {analysisData.explanation}
                         </Text>
                     </View>
 
-                    {parsedResult.recommendations.map((rec, index) => {
+                    {analysisData.recommendations.map((rec, index) => {
                         const images = haircutRepository.getHaircutImages(rec.name);
                         return (
                             <HaircutSection
@@ -131,7 +123,7 @@ export function ScanResultsScreen() {
                     bottomSheetRef={bottomSheetModalRef}
                     snapPoints={snapPoints}
                     renderBackdrop={renderBackdrop}
-                    title={modalContent === 'face' ? parsedResult.faceShape : parsedResult.hairType}
+                    title={modalContent === 'face' ? analysisData.faceShape : analysisData.hairType}
                     data={modalData}
                 />
             </SafeAreaView>

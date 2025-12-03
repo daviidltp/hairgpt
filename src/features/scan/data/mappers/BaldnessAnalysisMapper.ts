@@ -6,6 +6,9 @@ export function mapBaldnessAnalysisResultDtoToEntity(
 ): BaldnessAnalysisResult {
     return {
         baldnessProbability: dto.baldnessProbability,
+        norwoodStage: dto.norwoodStage,
+        recession: dto.recession,
+        crownDensity: dto.crownDensity,
         density: dto.density,
         texture: dto.texture,
         porosity: dto.porosity,
