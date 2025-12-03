@@ -130,7 +130,7 @@ export function BaldnessResultsScreen() {
                                     // TODO: Show Norwood scale explanation
                                 }}
                             >
-                                <View className="flex-row justify-between items-center mb-3">
+                                <View className="flex-row justify-between items-start mb-3">
                                     <View>
                                         <Text className="text-gray-400 text-base font-medium">Escala Norwood</Text>
                                         <Text className="text-xl font-bold text-black">{formatNorwoodStage(analysisData.norwoodStage)}</Text>
