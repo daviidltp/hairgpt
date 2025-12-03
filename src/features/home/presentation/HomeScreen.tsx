@@ -60,6 +60,29 @@ export function HomeScreen() {
                         <Text style={{ fontSize: 20 }}>💇‍♂️</Text>
                     </TouchableOpacity>
 
+                    <TouchableOpacity
+                        onPress={() => handlePress('BaldnessResults', {
+                            analysisResult: JSON.stringify({
+                                baldnessProbability: 75,
+                                norwoodStage: "3-Vertex",
+                                recession: 7,
+                                crownDensity: 4,
+                                density: 40,
+                                texture: 60,
+                                porosity: 30,
+                                volume: 20,
+                                summary: "Se observa un adelgazamiento significativo en la zona de la coronilla y entradas pronunciadas, indicativo de alopecia androgenética en etapa temprana a media."
+                            }),
+                            frontPhoto: require('../../../../assets/images/haircuts/front_image.png'),
+                            profilePhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
+                            crownPhoto: require('../../../../assets/images/haircuts/profile_pic.png'),
+                        })}
+                        className="w-11 h-11 rounded-full bg-white items-center justify-center"
+                        activeOpacity={0.7}
+                    >
+                        <Text style={{ fontSize: 20 }}>👨‍🦲</Text>
+                    </TouchableOpacity>
+
 
                     <IconButton
                         icon="settings-outline"

@@ -13,14 +13,7 @@ export function HomeCard({ title, description, imageSource, onPress }: HomeCardP
     return (
         <ScalePressable
             onPress={onPress}
-            className="w-full h-[320px] bg-surface rounded-[32px]"
-            style={{
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.2,
-                shadowRadius: 4.3,
-                elevation: 4,
-            }}
+            className="w-full h-[320px] bg-surface rounded-[32px] border border-gray-200"
         >
             <View className="flex-1 rounded-[32px] overflow-hidden">
                 {/* Image Section - Takes remaining space */}
